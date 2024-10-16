@@ -1,0 +1,91 @@
+.actionRequireSection {
+    display: flex;
+    display: -ms-flexbox;
+    flex-direction: row;
+    -ms-flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.actionRequireTableBody {
+    position: relative; 
+    flex: 1; 
+    -ms-flex: 1; 
+    height: 100%    
+}
+
+.actionRequireAbsoluteTableBody {
+    position: absolute; 
+    height: calc(100% - 10px); 
+    overflow-y: auto;
+}
+
+.actionRequireSection table {
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.actionRequireSection th, .actionRequireSection td {
+    text-align: left;
+    white-space: pre-wrap;
+    word-break: break-all;
+    padding-left: 5px;
+    padding-right: 5px;
+    vertical-align: top;
+}
+
+.actionRequireSection th {
+    background-color: lightgray;
+}
+
+.actionRequireSection td {
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.actionRequireSection th:nth-child(1) .cell, td:nth-child(1) .cell {
+    width: 120px;
+}
+
+.actionRequireSection th:nth-child(2) .cell, td:nth-child(2) .cell {
+    width: 120px;
+}
+
+.actionRequireSection th:nth-child(3) .cell, td:nth-child(3) .cell {
+    width: 150px;
+}
+
+.actionRequireSection th:nth-child(4) .cell, td:nth-child(4) .cell {
+    width: 150px;
+}
+
+.actionRequireSection tr.selected {
+    background-color: lightpink;
+}
+
+#actionRequireForm td {
+    width: 100px;
+}
+
+#changeSiteQuotaForm td {
+    width: 150px;
+}
+
+.actionRequireForm input, label, textarea, select {
+    width: 100%;
+}
+
+.actionRequireForm label {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.actionRequireForm input, textarea, select {
+    border: 1px solid lightgray;
+    border-radius: 3px;
+}
+
+.actionRequireForm input:focus, textarea:focus, select:focus {
+    outline: 2px solid lightcoral;
+    border: none;
+}
