@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <script src="./js/jquery-3.4.1.min.js"></script>
+
+    <style>
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            min-height: 100% !important;
+        }
+
+        .mainContainer {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            border: 5px solid blue;
+        }
+
+        .input-container {
+            margin-bottom: 20px;
+            width: 100%;
+            max-height: 100%;
+            overflow-y: auto;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            max-width: 100%;
+            border: 2px solid #add8e6;
+            padding: 10px;
+            border-radius: 4px;
+            outline: none;
+            transition: border-color 0.3s ease;
+            resize: none;
+        }
+
+            input[type="text"]:focus,
+            input[type="date"]:focus,
+            textarea:focus {
+                border-color: #00008b;
+            }
+
+        button {
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            width: 150px;
+            cursor: pointer;
+        }
+
+        .fieldType {
+            padding: 10px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="mainContainer"
+        data-fieldsID="8">
+
+        <div class="input-container" id="inputContainer">
+        </div>
+
+        <div style="display: table; border-collapse: separate; border-spacing: 10px 0;">
+            <div style="display: table-cell">
+                <button onclick="saveUnitForm(); return false;">Save</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var model = {
+                fieldsID: parseInt($('.mainContainer').attr('data-fieldsID'))
+            };
+            $.ajax({
+                url: 'http://218.255.16.118/YuHingTesting1/api/Mobile/TestApi/GetUnitForm',
+                type: "post",
+                contentType: 'application/json',
+                data: JSON.stringify(model),
+                success: function (result) {
+                    if (result.status == "success") {
+                        $('.mainContainer').attr('data-fieldsID', result.model.fieldsID);
+                        result.model.attributes.forEach(function (item) {
+                            addField(item.ID, item.type, item.title, item.value);
+                        });
+                    }
+                },
+                error: function (result) {
+                    alert('error');
+                },
+            });
+
+        });
+
+        function addField(attributeID, type, title, value) {
+            const container = document.getElementById('inputContainer');
+
+            const fieldType = document.createElement('div');
+            fieldType.classList.add('fieldType');
+            fieldType.innerHTML = title;
+            fieldType.setAttribute('data-attributeID', attributeID);
+            fieldType.setAttribute('data-type', type);
+
+            container.appendChild(fieldType);
+            switch (type) {
+                case 1:
+                    addTextField(container, title, value);
+                    break;
+                case 2:
+                    addTextAreaField(container, title, value);
+                    break;
+            }
+        }
+
+        function addTextField(container, title, value) {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = '';
+            input.value = value;
+
+            container.appendChild(input);
+        }
+
+        function addTextAreaField(container, title, value) {
+            const textarea = document.createElement('textarea');
+            textarea.value = value;
+
+            container.appendChild(textarea);
+        }
+
+        function saveUnitForm() {
+            var model = {
+                fieldsID: parseInt($('.mainContainer').attr('data-fieldsID')),
+                fields: []
+            };
+            $('.fieldType').each(function (index, element) {
+                var field = {
+                    attributeID: parseInt($(element).attr('data-attributeID')),
+                    value: $(element).next().val()
+                };
+                model.fields.push(field);
+            });
+
+            $.ajax({
+                url: 'http://218.255.16.118/YuHingTesting1/api/Mobile/TestApi/SaveUnitForm',
+                type: "post",
+                contentType: 'application/json',
+                data: JSON.stringify(model),
+                success: function (result) {
+                    alert(result.status);
+                },
+                error: function (result) {
+                    alert('error');
+                },
+            });
+        }
+    
+    </script>
+        
+</body>
+</html>
