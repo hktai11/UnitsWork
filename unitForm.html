@@ -128,6 +128,9 @@
                 case 2:
                     addTextAreaField(container, title, value);
                     break;
+                case 3:
+                    addFileField(container, title, value);
+                    break;
             }
         }
 
@@ -136,30 +139,128 @@
             input.type = 'text';
             input.placeholder = '';
             input.value = value;
-
             container.appendChild(input);
         }
 
         function addTextAreaField(container, title, value) {
             const textarea = document.createElement('textarea');
             textarea.value = value;
-
             container.appendChild(textarea);
         }
 
-        function saveUnitForm() {
-            var model = {
-                fieldsID: parseInt($('.mainContainer').attr('data-fieldsID')),
-                fields: []
+        function getExtensionFromContentType(contentType) {
+            var mimeTypes = {
+                'application/pdf': 'pdf',
+                'image/jpeg': 'jpg',
+                'image/png': 'png',
+                'text/plain': 'txt',
+                'application/zip': 'zip',
+                // Add more MIME types as needed
             };
-            $('.fieldType').each(function (index, element) {
-                var field = {
-                    attributeID: parseInt($(element).attr('data-attributeID')),
-                    value: $(element).next().val()
-                };
-                model.fields.push(field);
-            });
 
+            return mimeTypes[contentType] || '';
+        }
+
+        function addFileField(container, title, value) {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            container.appendChild(fileInput);
+
+            const newDiv = document.createElement('div');
+            const imgElement = document.createElement('img');
+    //        imgElement.src = `data:image/png;base64,${value}`;
+            imgElement.src = value;
+            imgElement.style.width = '100px'; // Set desired width
+            imgElement.style.height = '100px'; // Set desired height
+            imgElement.style.objectFit = 'contain'; // Maintain aspect ratio
+            imgElement.style.border = '1px solid black'; // Set border
+            newDiv.appendChild(imgElement);
+            container.appendChild(newDiv);
+
+            var downloadLink = document.createElement('a');
+            downloadLink.textContent = 'Download File';
+            downloadLink.style.cursor = 'pointer';
+            downloadLink.style.color = 'blue';
+            downloadLink.style.textDecoration = 'underline';
+            downloadLink.id = 'downloadLink';
+            downloadLink.addEventListener('click', function () {
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'http://218.255.16.118/YuHingTesting1/api/Mobile/TestApi/DownloadFile', true);
+                xhr.responseType = 'blob';
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        var contentDisposition = xhr.getResponseHeader('Content-Disposition');
+                        var contentType = xhr.getResponseHeader('Content-Type');
+                        var filename = 'downloadedFile';
+
+                        if (contentDisposition && contentDisposition.indexOf('filename=') !== -1) {
+                            filename = contentDisposition.split('filename=')[1].replace(/"/g, '');
+                        } else if (contentType) {
+                            var extension = getExtensionFromContentType(contentType);
+                            filename += extension ? '.' + extension : '';
+                        }
+
+                        var blob = new Blob([xhr.response], { type: xhr.getResponseHeader('Content-Type') });
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = filename;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        window.URL.revokeObjectURL(link.href);
+                    }
+                };
+
+                xhr.onerror = function () {
+    //                console.error('Error:', xhr.status, xhr.statusText);
+                    alert(`Error: ${xhr.status} ${xhr.statusText}`);
+                };
+
+                //            xhr.send();
+                var model = {
+                    fieldsID: parseInt($('.mainContainer').attr('data-fieldsID')),
+                    attributeID: parseInt($(this).prevAll('.fieldType').first().attr('data-attributeID'))
+                };
+                xhr.send(JSON.stringify(model));
+            });
+            container.appendChild(downloadLink);
+        }
+
+        function readFileAsBase64(file, model) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64String = reader.result.split(',')[1];
+                    var contentType = file.fileInput.type;
+                    var combinedString = `data:${contentType};base64,${base64String}`;
+
+                    var field = {
+                        attributeID: file.attributeID,
+                        value: combinedString
+                    };
+                    model.fields.push(field);
+
+                    resolve(combinedString);
+                };
+                reader.onerror = () => reject('Error reading file');
+                reader.readAsDataURL(file.fileInput);
+            });
+        }
+
+        function processFiles(files, model) {
+            const promises = Array.from(files).map(file => readFileAsBase64(file, model));
+            Promise.all(promises)
+                .then(results => {
+                    submitUnitForm(model);
+                })
+                .catch(error => {
+                });
+        }
+
+        function submitUnitForm(model) {
             $.ajax({
                 url: 'http://218.255.16.118/YuHingTesting1/api/Mobile/TestApi/SaveUnitForm',
                 type: "post",
@@ -172,6 +273,54 @@
                     alert('error');
                 },
             });
+        }
+
+        function saveUnitForm() {
+            var model = {
+                fieldsID: parseInt($('.mainContainer').attr('data-fieldsID')),
+                fields: []
+            };
+            var files = [];
+            $('.fieldType').each(function (index, element) {
+                var type = parseInt($(element).attr('data-type'));
+                var field = null;
+                switch (type) {
+                    case 1:
+                    case 2:
+                        field = {
+                            attributeID: parseInt($(element).attr('data-attributeID')),
+                            value: $(element).next().val()
+                        };
+                        break;
+                    case 3:
+                        var fileInput = element.nextElementSibling.files[0];
+                        if (fileInput) {
+                            var file = {
+                                fileInput: fileInput,
+                                attributeID: parseInt($(element).attr('data-attributeID'))
+                            };
+                            files.push(file);
+                        }
+                        else {
+                            field = {
+                                attributeID: parseInt($(element).attr('data-attributeID')),
+                                value: ""
+                            };
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                if (field != null) {
+                    model.fields.push(field);
+                }
+            });
+            if (files.length > 0) {
+                processFiles(files, model);
+            }
+            else {
+                submitUnitForm(model);
+            }
         }
     
     </script>
