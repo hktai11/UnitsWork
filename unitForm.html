@@ -227,6 +227,21 @@
                 xhr.send(JSON.stringify(model));
             });
             container.appendChild(downloadLink);
+
+            fileInput.addEventListener('change', function (event) {
+                var files = event.target.files;
+                if (files.length > 0) {
+                    var file = files[0];
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        imgElement.src = e.target.result;
+                        downloadLink.style.display = 'none';
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            });
         }
 
         function readFileAsBase64(file, model) {
