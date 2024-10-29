@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popup with jQuery</title>
+    <style>
+        .container {
+            position: relative;
+            border: 1px solid #ccc;
+            width: 300px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+        .header, .footer {
+            background-color: #f0f0f0;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            position: relative;
+        }
+        .close-popup-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .scrollable-list {
+            overflow-y: auto;
+            padding: 10px;
+            flex-grow: 1;
+        }
+        .parent-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .parent-list > li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .child-list {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        .popup {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 75%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .show-popup-btn {
+            margin: 10px auto;
+            display: block;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        List Header
+        <button class="close-popup-btn">Close Popup</button>
+    </div>
+    <div class="scrollable-list">
+        <ul class="parent-list">
+            <li>
+                Parent Item 1
+                <ul class="child-list">
+                    <li>Child Item 1.1</li>
+                    <li>Child Item 1.2</li>
+                </ul>
+            </li>
+            <li>
+                Parent Item 2
+                <ul class="child-list">
+                    <li>Child Item 2.1</li>
+                    <li>Child Item 2.2</li>
+                </ul>
+            </li>
+            <li>
+                Parent Item 3
+                <ul class="child-list">
+                    <li>Child Item 3.1</li>
+                    <li>Child Item 3.2</li>
+                </ul>
+            </li>
+            <li>
+                Parent Item 4
+                <ul class="child-list">
+                    <li>Child Item 4.1</li>
+                    <li>Child Item 4.2</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="footer">List Footer</div>
+    <button class="show-popup-btn">Show Popup</button>
+    <div class="popup">This is a popup starting from the bottom.</div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.show-popup-btn').click(function() {
+            $('.popup').show();
+        });
+
+        $('.close-popup-btn').click(function() {
+            $('.popup').hide();
+        });
+    });
+</script>
+
+</body>
+</html>
