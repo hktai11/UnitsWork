@@ -3,99 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scrollable Form Section</title>
+    <title>Scrollable List with Header and Footer</title>
+
+    <link rel="stylesheet" href="./css/w3.css">
+
     <style>
-        .container {
-            position: relative;
-            border: 1px solid #ccc;
-            width: 300px;
-            height: 400px;
+
+    html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        min-height: 100% !important;
+    }
+
+    .mainContainer {
+            width: 100%;
             display: flex;
             flex-direction: column;
+            height: 100%;
         }
-        .header, .footer {
-            background-color: #f0f0f0;
-            padding: 10px;
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; 
+            background-color: black;
+            color: white;
+            padding: 5px;
             text-align: center;
             font-weight: bold;
-            position: relative;
         }
-        .close-popup-btn {
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            cursor: pointer;
+        .footer {
+            width: 100%;
             padding: 5px;
         }
-        .form-section {
+        .scrollable-container {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
             overflow-y: auto;
             padding: 10px;
-            flex-grow: 1;
-            max-height: 250px; /* Adjust height as needed */
         }
-        .form-section input {
-            display: block;
-            width: 100%;
-            margin-bottom: 10px;
-            padding: 8px;
-            box-sizing: border-box;
-        }
-        .popup {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 75%;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            display: none;
-            justify-content: center;
+        .form-field {
+            display: flex;
             align-items: center;
-            text-align: center;
+            margin-bottom: 15px;
         }
-        .show-popup-btn {
-            margin: 10px auto;
-            display: block;
+       .form-field input[type="text"] {
+            flex-grow: 1;
+            padding: 5px;
+            margin-right: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-field button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        .form-field img {
+            width: 30px;
+            height: 30px;
+        }
+        .button-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
         }
     </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
-<div class="container">
+<div class="mainContainer">
     <div class="header">
-        Form Header
-        <button class="close-popup-btn">Close Popup</button>
+        <span>Form</span>
     </div>
-    <div class="form-section">
-        <input type="text" placeholder="Name">
-        <input type="email" placeholder="Email">
-        <input type="password" placeholder="Password">
-        <input type="text" placeholder="Phone">
-        <input type="text" placeholder="Address">
-        <input type="text" placeholder="City">
-        <input type="text" placeholder="State">
-        <input type="text" placeholder="Zip Code">
+    <div class="scrollable-container">
+        <form>
+            <div class="form-field">
+                <input type="text" placeholder="Field 1">
+                <button type="button">
+                    <img src="images/rightArrow.png">
+                </button>
+            </div>
+            <div class="form-field">
+                <input type="text" placeholder="Field 2">
+                <button type="button">
+                    <img src="images/rightArrow.png">
+                </button>
+            </div>
+            <div class="form-field">
+                <input type="text" placeholder="Field 3">
+                <button type="button">
+                    <img src="images/rightArrow.png">
+                </button>
+            </div>
+            <!-- Add more fields as needed -->
+        </form>
     </div>
-    <div class="footer">Form Footer</div>
-    <button class="show-popup-btn">Show Popup</button>
-    <div class="popup">This is a popup starting from the bottom.</div>
+    <div class="footer">
+        <div class="button-container">
+            <button type="submit">Submit</button>
+        </div>
+    </div>
 </div>
-
-<script>
-    $(document).ready(function() {
-        $('.show-popup-btn').click(function() {
-            $('.popup').show();
-        });
-
-        $('.close-popup-btn').click(function() {
-            $('.popup').hide();
-        });
-    });
-</script>
 
 </body>
 </html>

@@ -36,6 +36,13 @@
             text-align: center;
             font-weight: bold;
         }
+        .new-action-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            box-sizing: border-box;
+        }
         .scrollable-list {
             overflow-y: auto;
             padding: 10px;
@@ -59,10 +66,13 @@
             width: 30px;
             height: 30px;
         }
-        .form-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        textarea {
+            flex-grow: 1;
+            resize: none;
+            margin-right: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -70,55 +80,42 @@
 
 <div class="mainContainer">
     <div class="header">
-        <span>Forms</span>
-        <img src="images/add.png"
-             class="buttonIcon">
+        <div>Next Action</div>
+        <div class="new-action-container">
+            <textarea rows="3"></textarea>
+            <img src="images/rightArrow.png"
+                 class="buttonIcon">
+        </div>
     </div>
     <div class="scrollable-list">
         <ul class="parent-list">
             <li>
                 <div class="form-item">
-                    <span>Form 1</span>
-                    <img src="images/downArrow.png"
+                    <span>Next Possible Action 1</span>
+                    <img src="images/rightArrow.png"
                          class="buttonIcon">
                 </div>
-                <ul class="child-list">
-                    <li>Form Field</li>
-                    <li>Form Field</li>
-                </ul>
             </li>
             <li>
                 <div class="form-item">
-                    <span>Form 2</span>
-                    <img src="images/downArrow.png"
+                    <span>Next Possible Action 2</span>
+                    <img src="images/rightArrow.png"
                          class="buttonIcon">
                 </div>
-                <ul class="child-list">
-                    <li>Form Field</li>
-                    <li>Form Field</li>
-                </ul>
             </li>
             <li>
                 <div class="form-item">
-                    <span>Form 3</span>
-                    <img src="images/downArrow.png"
+                    <span>Next Possible Action 3</span>
+                    <img src="images/rightArrow.png"
                          class="buttonIcon">
                 </div>
-                <ul class="child-list">
-                    <li>Form Field</li>
-                    <li>Form Field</li>
-                </ul>
             </li>
             <li>
                 <div class="form-item">
-                    <span>Form 4</span>
-                    <img src="images/downArrow.png"
+                    <span>Next Possible Action 4</span>
+                    <img src="images/rightArrow.png"
                          class="buttonIcon">
                 </div>
-                <ul class="child-list">
-                    <li>Form Field</li>
-                    <li>Form Field</li>
-                </ul>
             </li>
         </ul>
     </div>
