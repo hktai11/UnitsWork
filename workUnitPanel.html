@@ -1,0 +1,174 @@
+<style>
+
+    * {
+    	box-sizing: border-box;
+    }
+
+	html, body {
+		margin: 0;
+		padding: 0;
+		height: 100vh;
+		overflow: hidden;
+	}
+
+    .main-container {
+        width: 100%; 
+        position: fixed; 
+        top: 0; 
+        bottom: 0; 
+        font-size: 20px;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .info-container {
+        display: flex;
+        flex-direction: column;
+        width: 20%;
+        height: 100%;
+        border: 3px solid black;
+    }
+    .info-container>.header {
+        width: 100%;
+        padding: 10px;
+    }
+    .info-container>.content-body {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        padding: 10px;
+        overflow-y: auto;
+    }
+
+    .actions-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+    }
+    .actions-container>.header {
+        width: 100%;
+        padding: 10px;
+    }
+    .actions-container>.content-body {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 10px;
+    }
+    .actions-container>.content-body>.actions-layers {
+        position: absolute;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        left: 10px;
+        right: 10px;
+        top: 10px;
+        bottom: 10px;
+        overflow-x: auto;
+    }
+    .actions-container>.content-body>.actions-layers>.actions-layer {
+        flex: 0 0 auto;
+        width: 20%;
+        height: 100%;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+    .actions-container>.content-body>.actions-layers>.actions-layer>.header {
+        width: 100%;
+        padding: 10px;
+    }
+    .actions-container>.content-body>.actions-layers>.actions-layer>.content-body {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        padding: 10px;
+        overflow-y: auto;
+    }
+    .actions-container>.content-body>.actions-layers>.actions-layer>.content-body>.form {
+        flex: 0 0 auto;
+        width: 100%;
+        height: 100px;
+        border: 3px solid blue;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+
+    button {
+        font-size: 20px;
+    }
+
+</style>
+
+<div class="main-container">
+    <div class="info-container">
+        <div class="header">
+            <button onclick="addInfoField(); return false;">Add Information</button>
+        </div>
+        <div class="content-body">
+        </div>
+    </div>
+    <div class="actions-container">
+        <div class="header">
+            <button onclick="addActionsLayer(); return false;">Add Actions Layer</button>
+        </div>
+        <div class="content-body">
+            <div class="actions-layers"></div>
+        </div>
+    </div>
+</div>
+
+<script src="./js/jquery-3.4.1.min.js"></script>
+
+<script>
+
+    function addInfoField() {
+
+        var container = $('.info-container').find('.content-body');
+        var fieldContainer = $('<div></div>');
+        $('<textarea></textarea>', {
+            css: {
+                width: '100%',
+                height: '60px',
+                marginBottom: '10px'
+            }
+        }).appendTo(fieldContainer);
+        var newElem = fieldContainer.appendTo(container);
+
+        container.animate({
+            scrollTop: newElem.offset().top - 
+                    container.offset().top + 
+                    container.scrollTop()
+        }, 500);
+
+    }
+
+    function addActionsLayer() {
+
+        var container = $('.actions-container').find('.content-body').find('.actions-layers');
+        var actionsLayer = $('<div></div>', {
+            class: 'actions-layer'
+        });
+        var header = $('<div></div>', {
+            class: 'header'
+        });
+        var addFormButton = $('<button>Add Form</button>');
+        addFormButton.on('click', function() {
+            var container = $(this).closest('.actions-layer').find('.content-body');
+            container.append('<div class="form"></div>');
+        });
+        header.append(addFormButton);
+        var contentBody = $('<div></div>', {
+            class: 'content-body'
+        });
+        actionsLayer.append(header);
+        actionsLayer.append(contentBody);
+        container.append(actionsLayer);
+
+    }
+
+</script>
