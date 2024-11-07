@@ -1,147 +1,323 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form</title>
+<link rel="stylesheet" href="./css/w3.css">
 
-    <link rel="stylesheet" href="./css/w3.css">
+<style>
 
-    <style>
-
-    html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}
+    * {
+        box-sizing: border-box;
+    }
 
     html, body {
         margin: 0;
         padding: 0;
-        width: 100%;
-        height: 100%;
-        font-size: 16px;
-        min-height: 100% !important;
+        height: 100vh;
+        overflow: hidden;
+        font-size: 20px
     }
 
-    .mainContainer {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between; 
-            background-color: black;
-            color: white;
-            padding: 5px;
-            text-align: center;
-            font-weight: bold;
-        }
-        .footer {
-            width: 100%;
-            padding: 5px;
-        }
-        .scrollable-container {
-            flex-grow: 1;
-            width: 100%;
-            height: 100%;
-            overflow-y: auto;
-            padding: 10px;
-        }
-        .form-field {
-            display: flex; 
-            flex-direction: row; 
-            align-items: center;
-            width: 100%; 
-            background-color: white; 
-            padding: 3px; 
-            margin-left: 10px; 
-            margin-right: 10px;
-        }
-       .form-field input[type="text"] {
-            flex: 1;
-            padding: 5px;
-            margin-right: 10px;
-            border-radius: 5px;
-        }
-        .button-container {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-        }
-        .info-container {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            border: 1px solid lightgray;
-            background-color: lightgray;
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            overflow: hidden;
-            position: relative;
-        }
-        .info-content-wrapper {
-            flex: 1;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            box-sizing: border-box;
-        }
-        .info-content {
-            padding: 10px;
-            text-align: center;
-            word-wrap: break-word;
-        }
-        .buttonIcon {
-            width: 30px;
-            height: 30px;
-        }
-    </style>
-</head>
-<body>
+    .form-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .form-container>.header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; 
+        background-color: black;
+        color: white;
+        padding: 5px;
+        text-align: center;
+        font-weight: bold;
+    }
+    .form-container>.header>.button-icon {
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+    }
+    .form-container>.footer {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        gap: 5px;
+        background-color: #f5f5dc;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .form-container>.footer>.card {
+        width: 100%;
+        padding: 10px;
+        word-wrap: break-word;
+        background-color: white;
+        border-radius: 5px;
+    }
+    .form-container>.footer>.info-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        border: 1px solid lightgray;
+        background-color: lightgray;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        overflow: hidden;
+        position: relative;
+    }
+    .form-container>.footer>.info-container>.info-content-wrapper {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        box-sizing: border-box;
+    }
+    .form-container>.footer>.info-container>.info-content-wrapper>.info-content {
+        padding: 10px;
+        text-align: center;
+        word-wrap: break-word;
+    }
+    .form-container>.scrollable-container {
+        flex-grow: 1;
+        width: 100%;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .form-container>.scrollable-container>.form-fields {
+        width: 100%;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field {
+        display: flex; 
+        flex-direction: row; 
+        align-items: center;
+        width: 100%; 
+        background-color: white; 
+        padding: 3px; 
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>.button-icon {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>input[type="text"],
+    .form-container>.scrollable-container>.form-fields>.form-field>textarea {
+        flex: 1;
+        padding: 5px;
+        border-radius: 5px;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>textarea {
+        resize: none;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>.layers {
+        flex: 1;
+        padding: 5px;
+        margin-right: 10px;
+        position: relative;
+        width: 100%;
+        height: 50px;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>.layers>.layer {
+        position: absolute;
+        width: calc(100% - 10px);
+        height: 40px;
+        background-color: white;
+        border: 2px solid black;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>.layers>.layer:nth-child(1) {
+        top: 0;
+        left: 0;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>.layers>.layer:nth-child(2) {
+        top: 5px;
+        left: 5px;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>.layers>.layer:nth-child(3) {
+        top: 10px;
+        left: 10px;
+    }    
+    .form-container>.scrollable-container>.form-fields>.form-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding-left: 20px;
+        padding-right: 50px;
+    }
+    .form-container>.scrollable-container>.form-options>.option {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        border: 2px solid black;
+        border-radius: 50%;
+        text-align: center;
+        font-size: 60%;
+        cursor: pointer;
+    }
+    .form-container>.scrollable-container>.button-container {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+    }
+    .form-container>.scrollable-container>.button-container>.button-icon {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+    }
+</style>
 
-<div class="mainContainer">
+<script src="./js/jquery-3.4.1.min.js"></script>
+
+<div class="form-container">
     <div class="header">
+        <img src="images/expand.png"
+             class="button-icon"
+             onclick="showFullForm(); return false;">
         <span>Form</span>
+        <img src="images/submit.png"
+             class="button-icon"
+             onclick="submitForm(); return false;">
     </div>
     <div class="scrollable-container">
-        <form>
-            <div class="form-field">
-                <input type="text" placeholder="Field 1">
-                <img src="images/paste.png"
-                     class="buttonIcon">
-            </div>
-            <div class="form-field">
-                <input type="text" placeholder="Field 2">
-                <img src="images/paste.png"
-                     class="buttonIcon">
-            </div>
-            <div class="form-field">
-                <input type="text" placeholder="Field 3">
-                <img src="images/paste.png"
-                     class="buttonIcon">
-            </div>
-            <!-- Add more fields as needed -->
-        </form>
-    </div>
-    <div class="footer">
+        <div class="form-fields">
+        </div>
         <div class="button-container">
-            <button type="submit">Submit</button>
+            <img src="images/add.png"
+                 class="button-icon"
+                 onclick="addFormField(); return false;">
         </div>
     </div>
     <div class="footer"
-         style="max-height: 20vh;">
-        <div class="info-container">
-            <div class="info-content-wrapper">
-                <div class="info-content">Information Content</div>
-            </div>
-            <button>Next Action</button>
-        </div>
+         style="height: 50vh">
     </div>
 </div>
 
-</body>
-</html>
+<script>
+
+    $(document).ready(function () {
+        addFormField();
+    });
+
+    function getTextField() {
+        return $('<input>', {
+            type: 'text',
+            placeholder: 'Text'
+        });
+    }
+
+    function getTextAreaField() {
+        return $('<textarea>', {
+            placeholder: "This is a long placeholder text that will wrap to the next line if it's too long for the width of the textarea"
+        });
+    }
+
+    function getFormsField() {
+        var layers = $('<div>', {
+            class: 'layers',
+        });
+        $('<div>', {
+            class: 'layer',
+        }).appendTo(layers);
+        $('<div>', {
+            class: 'layer',
+        }).appendTo(layers);
+        $('<div>', {
+            class: 'layer',
+        }).appendTo(layers);
+        return layers;
+    }
+
+    function addFormField() {
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
+        var fieldContainer = $('<div>', {
+            class: 'form-field',
+            'data-type': '1'
+        }).appendTo(container);
+        var imgDiv = $('<img>', {
+            src: 'images/options.png',
+            class: 'button-icon',
+        }).appendTo(fieldContainer);
+        imgDiv.click(function() {
+            openOptionsSection(this);
+        });
+        getTextField().appendTo(fieldContainer);
+
+        var optionsContainer = $('<div>', {
+            class: 'form-options',
+            css: { display: 'none' }
+        }).appendTo(container);
+        var textOption = $('<div>', {
+            class: 'option',
+            text: 'Text',
+            'data-type': '1'
+        }).appendTo(optionsContainer);
+        textOption.click(function() {
+            changeFormFieldType(this)
+        });
+        var formsOption = $('<div>', {
+            class: 'option',
+            text: 'Forms',
+            'data-type': '2'
+        }).appendTo(optionsContainer);
+        formsOption.click(function() {
+            changeFormFieldType(this)
+        });
+
+        var scrollableContainer = $('.form-container').find('.scrollable-container');
+        var addButton = scrollableContainer.find('.button-container');
+        scrollableContainer.animate({
+            scrollTop: addButton.offset().top - scrollableContainer.offset().top + scrollableContainer.scrollTop()
+        }, 500);
+    }
+
+    function openOptionsSection(elem) {
+        var container = $(elem).closest('.form-field').next();
+        if (container.is(':visible')) {
+            container.hide();
+        } 
+        else {
+            container.show();
+        }
+    }
+
+    function changeFormFieldType(elem) {
+        var type = parseInt($(elem).attr('data-type'));
+        var options = $(elem).closest('.form-options');
+        var formField = options.prev();
+        formField.attr('data-type', type);
+        if (type == 1) {
+            formField.children().first().replaceWith(getTextField());
+        }
+        else if (type == 2) {
+            formField.children().first().replaceWith(getFormsField());
+        }
+        options.hide();
+    }
+
+    function submitForm() {
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
+        container.children('.form-field').each(function(){
+            var type = parseInt($(this).attr('data-type'));
+            if (type == 1) {
+                $('<div>', {
+                    class: 'card',
+                    text: $(this).find('input').val(),
+                }).prependTo($('.form-container').find('.footer'));
+                return false;
+            }
+        });
+        container.find('input').val('');
+        container.find('textarea').val('');
+        $('.form-container').find('.footer').show();
+    }
+
+    function showFullForm() {
+        $('.form-container').find('.footer').hide();
+    }
+
+</script>
