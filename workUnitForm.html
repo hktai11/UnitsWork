@@ -199,6 +199,8 @@
 
 <script>
 
+    var baseURL = "http://218.255.16.118/YuHingTesting1/api/Mobile/ActionFormsAPI/";
+
     $(document).ready(function () {
         addFormField();
     });
@@ -300,17 +302,51 @@
     }
 
     function submitForm() {
+
+        var model = {
+            formsID: parseInt($('.mainContainer').attr('data-unitID')),
+            formID: parseInt($('.mainContainer').attr('data-unitParentID')),
+            fields: []
+        };
+
+        attributeID
+        type
+        value
+
+        var fieldValue = '';
         var container = $('.form-container').find('.scrollable-container').find('.form-fields');
         container.children('.form-field').each(function(){
             var type = parseInt($(this).attr('data-type'));
             if (type == 1) {
-                $('<div>', {
-                    class: 'card',
-                    text: $(this).find('input').val(),
-                }).prependTo($('.form-container').find('.footer'));
+                fieldValue = $(this).find('input').val();
                 return false;
             }
         });
+        $.ajax({
+            url: baseURL + 'SaveActionForm',
+            type: "post",
+            contentType: 'application/json',
+//            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == 'success') {
+                    refreshForm(fieldValue);
+                }
+                else {
+                    alert('未能存入 !')
+                }
+            },
+            error: function (result) {
+                alert('未能送出 !')
+            },
+        });
+    }
+
+    function refreshForm(fieldValue) {
+        $('<div>', {
+            class: 'card',
+            text: fieldValue,
+        }).prependTo($('.form-container').find('.footer'));
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
         container.find('input').val('');
         container.find('textarea').val('');
         $('.form-container').find('.footer').show();
