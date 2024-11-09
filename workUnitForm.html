@@ -203,6 +203,7 @@
 
     $(document).ready(function () {
         addFormField();
+        getActionForms();
     });
 
     function getTextField() {
@@ -302,34 +303,38 @@
     }
 
     function submitForm() {
-
         var model = {
-            formsID: parseInt($('.mainContainer').attr('data-unitID')),
-            formID: parseInt($('.mainContainer').attr('data-unitParentID')),
+            formsID: 29,
+            formID: '',
             fields: []
         };
-
-        attributeID
-        type
-        value
-
-        var fieldValue = '';
+        var fieldID = 1;
+        var formTitle = "";
         var container = $('.form-container').find('.scrollable-container').find('.form-fields');
         container.children('.form-field').each(function(){
+            var field = {
+                fieldID: fieldID,
+                type: 1,
+                value: ''
+            };
             var type = parseInt($(this).attr('data-type'));
             if (type == 1) {
-                fieldValue = $(this).find('input').val();
-                return false;
+                field.value = $(this).find('input').val();
+                if (formTitle == '') {
+                    formTitle = field.value;
+                }
             }
+            model.fields.push(field);
+            fieldID++;
         });
         $.ajax({
             url: baseURL + 'SaveActionForm',
             type: "post",
             contentType: 'application/json',
-//            data: JSON.stringify(model),
+            data: JSON.stringify(model),
             success: function (result) {
                 if (result.status == 'success') {
-                    refreshForm(fieldValue);
+                    refreshForm(formTitle);
                 }
                 else {
                     alert('未能存入 !')
@@ -354,6 +359,82 @@
 
     function showFullForm() {
         $('.form-container').find('.footer').hide();
+    }
+
+    function getActionForms() {
+        $('.form-container').find('.footer').html('');
+        var model = {
+            formsID: 29,
+            searchKey: ''
+        };
+        $.ajax({
+            url: baseURL + 'GetActionForms',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == "success") {
+                    var fields = [];
+                    result.model.fields.forEach(function (item) {
+                        var field = {
+                            formID: item.formID,
+                            formTitle: item.formTitle
+                        };
+                        fields.push(field);
+                    });
+                    for (var i = 0; i < fields.length; i++) {
+                        $('<div>', {
+                            class: 'card',
+                            text: fields[i].formTitle,
+                            'data-id': fields[i].formID
+                        }).appendTo($('.form-container').find('.footer'));
+                    }
+                    $('.form-container').find('.footer').show();
+                }
+            },
+            error: function (result) {
+
+                alert('error');
+
+            },
+        });
+    }
+    function getActionForm() {
+        var model = {
+            formsID: 29,
+            formID: 'cb154a9e-4e7f-4c54-9211-bea30fa6442b'
+        };
+
+        $.ajax({
+            url: baseURL + 'GetActionForm',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == "success") {
+                    var fields = [];
+
+        //                    alert(result.model.fields.length);
+
+                    result.model.fields.forEach(function (item) {
+                        var field = {
+                            fieldID: item.fieldID,
+                            type: item.type,
+                            value: item.value
+                        };
+                        fields.push(field);
+
+                                alert(field.fieldID + ' - ' + field.type + ' - ' + field.value);
+
+                    });
+                }
+            },
+            error: function (result) {
+
+                alert('error');
+
+            },
+        });
     }
 
 </script>
