@@ -169,15 +169,85 @@
         height: 40px;
         cursor: pointer;
     }
+
+    .action-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .action-container>.header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; 
+        background-color: black;
+        color: white;
+        padding: 5px;
+        text-align: center;
+        font-weight: bold;
+    }
+    .action-container>.header>.button-icon {
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+    }
+    .action-container>.footer {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        gap: 5px;
+        background-color: #f5f5dc;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .action-container>.scrollable-container {
+        flex-grow: 1;
+        width: 100%;
+        overflow-y: auto;
+        padding: 10px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .action-container>.scrollable-container>.item {
+        position: relative;
+        width: 100%;
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+    }
+    .action-container>.scrollable-container>.item:last-child {
+        border-bottom: none;
+    }
+    .action-container>.scrollable-container>.item>.badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 50%;
+        font-weight: bold;
+    }
 </style>
 
 <script src="./js/jquery-3.4.1.min.js"></script>
 
 <div class="form-container">
     <div class="header">
-        <img src="images/expand.png"
+        <img src="images/backNavigation.png"
              class="button-icon"
-             onclick="showFullForm(); return false;">
+             onclick="showActions(); return false;">
         <span>Form</span>
         <img src="images/submit.png"
              class="button-icon"
@@ -186,14 +256,28 @@
     <div class="scrollable-container">
         <div class="form-fields">
         </div>
+        <!--
         <div class="button-container">
             <img src="images/add.png"
                  class="button-icon"
                  onclick="addFormField(); return false;">
         </div>
+        -->
     </div>
     <div class="footer"
          style="height: 50vh">
+    </div>
+</div>
+
+<div class="action-container"
+     style="display: none">
+    <div class="header">
+        <span>Actions</span>
+    </div>
+    <div class="scrollable-container">
+    </div>
+    <div class="footer"
+         style="display: none; height: 50vh">
     </div>
 </div>
 
@@ -202,8 +286,11 @@
     var baseURL = "http://218.255.16.118/YuHingTesting1/api/Mobile/ActionFormsAPI/";
 
     $(document).ready(function () {
-        addFormField();
+        addFormField(1);
+        addFormField(2);
         getActionForms();
+
+        addActionItem('Classify raw', 100);
     });
 
     function getTextField() {
@@ -215,7 +302,7 @@
 
     function getTextAreaField() {
         return $('<textarea>', {
-            placeholder: "This is a long placeholder text that will wrap to the next line if it's too long for the width of the textarea"
+            placeholder: "Multiple Lines Text"
         });
     }
 
@@ -235,12 +322,13 @@
         return layers;
     }
 
-    function addFormField() {
+    function addFormField(type) {
         var container = $('.form-container').find('.scrollable-container').find('.form-fields');
         var fieldContainer = $('<div>', {
             class: 'form-field',
             'data-type': '1'
         }).appendTo(container);
+        /*
         var imgDiv = $('<img>', {
             src: 'images/options.png',
             class: 'button-icon',
@@ -248,8 +336,15 @@
         imgDiv.click(function() {
             openOptionsSection(this);
         });
-        getTextField().appendTo(fieldContainer);
+        */
+        if (type == 1) {
+            getTextField().appendTo(fieldContainer);
+        }
+        else if (type == 2) {
+            getTextAreaField().appendTo(fieldContainer);
+        }
 
+        /*
         var optionsContainer = $('<div>', {
             class: 'form-options',
             css: { display: 'none' }
@@ -276,6 +371,7 @@
         scrollableContainer.animate({
             scrollTop: addButton.offset().top - scrollableContainer.offset().top + scrollableContainer.scrollTop()
         }, 500);
+        */
     }
 
     function openOptionsSection(elem) {
@@ -435,6 +531,39 @@
 
             },
         });
+    }
+
+    function showActions() {
+        $('.form-container').hide();
+        $('.action-container').show();
+    }
+
+    function addActionItem(title, number) {
+        var container = $('.action-container').find('.scrollable-container');
+        var itemContainer = $('<div>', {
+            class: 'item',
+            text: title
+        }).appendTo(container);
+        itemContainer.click(function() {
+            showActionItems();
+        });
+
+        var badge = $('<div>', {
+            class: 'badge',
+            text: number > 99 ? "99+" : number.toString()
+        }).appendTo(itemContainer);
+        badge.click(function(event) {
+            showPendingActionItems(event);
+        });
+    }
+
+    function showActionItems() {
+        $('.action-container').find('.footer').show();
+    }
+
+    function showPendingActionItems(event) {
+        event.stopPropagation();
+        $('.action-container').find('.footer').show();
     }
 
 </script>
