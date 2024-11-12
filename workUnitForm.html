@@ -50,9 +50,11 @@
     .form-container>.footer>.card {
         width: 100%;
         padding: 10px;
+        white-space: pre-wrap;
         word-wrap: break-word;
         background-color: white;
         border-radius: 5px;
+        cursor: pointer;
     }
     .form-container>.footer>.info-container {
         display: flex;
@@ -243,15 +245,20 @@
 
 <script src="./js/jquery-3.4.1.min.js"></script>
 
-<div class="form-container">
+<div class="form-container"
+     data-formsID=""
+     data-formID="">
     <div class="header">
         <img src="images/backNavigation.png"
              class="button-icon"
-             onclick="showActions(); return false;">
+             onclick="getUserActions(); return false;">
         <span>Form</span>
+        <img src="images/add.png"
+             class="button-icon"
+             onclick="newForm(); return false;">
         <img src="images/submit.png"
              class="button-icon"
-             onclick="submitForm(); return false;">
+             onclick="saveActionForm(); return false;">
     </div>
     <div class="scrollable-container">
         <div class="form-fields">
@@ -283,26 +290,290 @@
 
 <script>
 
-    var baseURL = "http://218.255.16.118/YuHingTesting1/api/Mobile/ActionFormsAPI/";
+    var baseURL = "http://183.178.96.30/YuHingTesting1/api/Mobile/ActionFormsAPI/";
 
     $(document).ready(function () {
+
+        authorizeUser();
+
+//        getActionForm();
+
+        /*
         addFormField(1);
         addFormField(2);
         getActionForms();
 
         addActionItem('Classify raw', 100);
+        */
     });
 
-    function getTextField() {
-        return $('<input>', {
-            type: 'text',
-            placeholder: 'Text'
+    function authorizeUser() {
+        $.ajax({
+            url: baseURL + 'AuthorizeUser',
+            type: "post",
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.status == 'success') 
+                {
+                    $('.form-container').attr('data-formsID', result.model.formsID);
+                    $('.form-container').attr('data-formID', '');
+                    getActionForm();
+                    getActionForms();
+
+//                    alert($('.form-container').attr('data-formsID'));
+
+                }
+                else {
+                    alert("User not authorized !");
+                }
+            },
+            error: function (result) {
+                alert('Authorization error !')
+            },
         });
     }
 
-    function getTextAreaField() {
+    function getActionForm() {
+        $('.form-container').find('.scrollable-container').find('.form-fields').html('');
+        var model = {
+            formsID: $('.form-container').attr('data-formsID'),
+            formID: $('.form-container').attr('data-formID'),
+        };
+        $.ajax({
+            url: baseURL + 'GetActionForm',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == "success") {
+                    result.model.fields.forEach(function (item) {
+                        addFormField(item.fieldID, item.type, item.value);
+
+//                        alert(item.fieldID + ' - ' + item.type + ' - ' + item.value);
+
+                    });
+                    $('.action-container').hide();
+                    $('.form-container').show();
+                }
+            },
+            error: function (result) {
+
+                alert('error');
+
+            },
+        });
+    }
+
+    function getUserActions() {
+        $('.action-container').find('.scrollable-container').html('');
+        $.ajax({
+            url: baseURL + 'GetUserActions',
+            type: "post",
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.status == 'success') {
+                    result.model.fields.forEach(function (item) {
+                        var container = $('.action-container').find('.scrollable-container');
+                        var itemContainer = $('<div>', {
+                            class: 'item',
+                            text: item.title,
+                            'data-formsID': item.formsID
+                        }).appendTo(container);
+                        itemContainer.click(function() {
+                            $('.form-container').attr('data-formID', '');
+                            getActionForm();
+                        });
+                        var badgeCount = item.totalPendingForms;
+                        if (badgeCount > 0) {
+                            var badge = $('<div>', {
+                                class: 'badge',
+                                text: badgeCount > 99 ? "99+" : badgeCount.toString()
+                            }).appendTo(itemContainer);
+                        }
+
+//                        alert(item.formsID + ' - ' + item.title + ' - ' + item.totalPendingForms);
+
+                    });
+                    $('.form-container').hide();
+                    $('.action-container').show();
+                }
+            },
+            error: function (result) {
+                alert('error !')
+            },
+        });
+    }
+
+    function getActionForms() {
+        $('.form-container').find('.footer').html('');
+        var model = {
+            formsID: $('.form-container').attr('data-formsID'),
+            searchKey: ''
+        };
+        $.ajax({
+            url: baseURL + 'GetActionForms',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == "success") {
+                    result.model.fields.forEach(function (item) {
+                        var backgroundColor = "white";
+                        if (item.status == "0") {
+                            backgroundColor = "#E0FFFF";
+                        }
+                        var card = $('<div>', {
+                            class: 'card',
+                            text: item.content,
+                            css: {
+                                'background-color': backgroundColor
+                            },   
+                            'data-formID': item.formID
+                        });
+                        card.appendTo($('.form-container').find('.footer'));
+                        card.click(function() {
+                            $('.form-container').attr('data-formID', $(this).attr('data-formID'));
+                            getActionForm();
+                        });
+                        $('.form-container').find('.footer').show();
+
+//                        alert(item.formID + ' - ' + item.content + ' - ' + item.status);
+
+                    });
+                }
+            },
+            error: function (result) {
+
+                alert('error');
+
+            },
+        });
+    }
+
+    function newForm() {
+        $('.form-container').attr('data-formID', '');
+        getActionForm();
+    }
+
+    function saveActionForm() {
+        var model = {
+            formsID: $('.form-container').attr('data-formsID'),
+            formID: $('.form-container').attr('data-formID'),
+            fields: []
+        };
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
+        container.children('.form-field').each(function(){
+            var type = parseInt($(this).attr('data-type'));
+            var value = '';
+            if (type == 1) {
+                value = $(this).find('input').val();
+            }
+            else if (type == 2) {
+                value = $(this).find('textarea').val();
+            }
+            var field = {
+                fieldID: $(this).attr('data-fieldID'),
+                type: type,
+                value: value
+            };
+            model.fields.push(field);
+
+//            alert(field.fieldID + ' - ' + field.type + ' - ' + field.value);
+        });
+
+//        alert(model.formsID + ' - ' + model.formID);
+
+        $.ajax({
+            url: baseURL1 + 'SaveActionForm',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == 'success') {
+
+                    var formID = result.model.formID;
+
+                    getActionForms();
+
+                    var container = $('.form-container').find('.footer');
+                    var card = $('.card[data-formID="' + formID + '"]');
+                    if (card.length) {
+                        container.scrollTop(
+                            card.offset().top - container.offset().top + container.scrollTop()
+                        );
+                    }
+
+                    alert('success');
+
+                }
+                else {
+                    alert('未能存入 !')
+                }
+            },
+            error: function (result) {
+                alert('未能送出 !')
+            },
+        });
+    }
+
+    /*
+    function submitForm() {
+        var model = {
+            formsID: 29,
+            formID: '',
+            fields: []
+        };
+        var fieldID = 1;
+        var formTitle = "";
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
+        container.children('.form-field').each(function(){
+            var field = {
+                fieldID: fieldID,
+                type: 1,
+                value: ''
+            };
+            var type = parseInt($(this).attr('data-type'));
+            if (type == 1) {
+                field.value = $(this).find('input').val();
+                if (formTitle == '') {
+                    formTitle = field.value;
+                }
+            }
+            model.fields.push(field);
+            fieldID++;
+        });
+        $.ajax({
+            url: baseURL + 'SaveActionForm',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == 'success') {
+                    refreshForm(formTitle);
+                }
+                else {
+                    alert('未能存入 !')
+                }
+            },
+            error: function (result) {
+                alert('未能送出 !')
+            },
+        });
+    }
+    */
+
+    function getTextField(value) {
+        return $('<input>', {
+            type: 'text',
+            placeholder: 'Text',
+            value: value
+        });
+    }
+
+    function getTextAreaField(value) {
         return $('<textarea>', {
-            placeholder: "Multiple Lines Text"
+            placeholder: "Multiple Lines Text",
+            text: value
         });
     }
 
@@ -322,11 +593,12 @@
         return layers;
     }
 
-    function addFormField(type) {
+    function addFormField(fieldID, type, value) {
         var container = $('.form-container').find('.scrollable-container').find('.form-fields');
         var fieldContainer = $('<div>', {
             class: 'form-field',
-            'data-type': '1'
+            'data-fieldID': fieldID,
+            'data-type': type
         }).appendTo(container);
         /*
         var imgDiv = $('<img>', {
@@ -338,10 +610,10 @@
         });
         */
         if (type == 1) {
-            getTextField().appendTo(fieldContainer);
+            getTextField(value).appendTo(fieldContainer);
         }
         else if (type == 2) {
-            getTextAreaField().appendTo(fieldContainer);
+            getTextAreaField(value).appendTo(fieldContainer);
         }
 
         /*
@@ -457,6 +729,7 @@
         $('.form-container').find('.footer').hide();
     }
 
+    /*
     function getActionForms() {
         $('.form-container').find('.footer').html('');
         var model = {
@@ -495,6 +768,7 @@
             },
         });
     }
+
     function getActionForm() {
         var model = {
             formsID: 29,
@@ -532,11 +806,7 @@
             },
         });
     }
-
-    function showActions() {
-        $('.form-container').hide();
-        $('.action-container').show();
-    }
+        */
 
     function addActionItem(title, number) {
         var container = $('.action-container').find('.scrollable-container');
