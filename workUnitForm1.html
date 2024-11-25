@@ -1,0 +1,1522 @@
+<link rel="stylesheet" href="./css/w3.css">
+
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        overflow: hidden;
+        font-size: 20px
+    }
+
+    .form-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .form-container>.header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; 
+        background-color: black;
+        color: white;
+        padding: 5px;
+        text-align: center;
+        font-weight: bold;
+    }
+    .form-container>.header .button-icon {
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+    }
+
+    .form-container>.submit-field-options {
+        width: 100%;
+    }
+    .form-container>.submit-field-options>.options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        background-color: lightgray;
+        padding: 5px;
+    }
+    .form-container>.submit-field-options>.options > * {
+        box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 5px 8px 0 rgba(0,0,0,.14), 0 1px 14px 0 rgba(0,0,0,.12);
+        padding: 5px 10px;
+        border-radius: 10px;
+        box-sizing: border-box;
+        white-space: nowrap;
+        color: #666;
+    }
+    .form-container>.submit-field-options>.options > div:not(:last-child) {
+        margin-right: 0px;
+    }
+    .form-container>.submit-field-options>.options > div {
+        background-color: white;
+    }
+
+    .form-container>.footer {
+        width: 100%;
+        height: 100%;
+        background-color: #f5f5dc;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .form-container>.footer>.forms {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 5px;
+        background-color: transparent;
+    }
+    .form-container>.footer>.forms>.card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 10px;
+        background-color: white;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        cursor: pointer;
+    }
+    .form-container>.footer>.options {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 5px;
+        background-color: transparent;
+    }
+    .form-container>.footer>.options>.card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 10px;
+        background-color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .form-container>.footer>.options>.card>.text {
+        background-color: transparent; 
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+    .form-container>.footer>.options>.card>.image {
+        width: 40px;
+        height: 40px;
+    }
+    .form-container>.footer>.info-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        border: 1px solid lightgray;
+        background-color: lightgray;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        overflow: hidden;
+        position: relative;
+    }
+    .form-container>.footer>.info-container>.info-content-wrapper {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        box-sizing: border-box;
+    }
+    .form-container>.footer>.info-container>.info-content-wrapper>.info-content {
+        padding: 10px;
+        text-align: center;
+        word-wrap: break-word;
+    }
+    .form-container>.scrollable-container {
+        flex-grow: 1;
+        width: 100%;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .form-container>.scrollable-container>.form-fields {
+        width: 100%;
+    }
+    .form-container>.scrollable-container>.form-fields>.raw-field {
+        width: max-content; 
+        margin-bottom: 5px;
+        padding-left: 10px; 
+        padding-right: 10px;
+        padding-top: 5px; 
+        padding-bottom: 5px; 
+        border-radius: 10px;
+        background-color: #f5f5dc;
+        white-space: pre-line;
+    }
+
+    .form-container>.scrollable-container>.form-fields>.request-action {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+    }
+    .form-container>.scrollable-container>.form-fields>.request-action>.button {
+        border: none;
+        background-color: #F891B3;
+        color: #ffff;
+        padding: 5px 10px;
+        border-radius: 10px;
+        margin-bottom: 5px;
+        position: relative;
+        box-shadow: 5px 5px 5px #FBC1D4;
+        transition: all 0.3s ease;
+        max-width: 60vw;
+    }
+    .form-container>.scrollable-container>.form-fields>.request-action>.button:hover {
+        box-shadow: 0px 2px 20px #A20A3C;
+        top: 3px;
+    }
+    .form-container>.scrollable-container>.form-fields>.request-action>.button:active {
+        box-shadow: none;
+        top: 5px;
+    }
+
+    .form-container>.scrollable-container>.form-fields>.form-field {
+        display: flex; 
+        flex-direction: row; 
+        align-items: center;
+        width: 100%; 
+        background-color: white; 
+        padding: 3px; 
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>.button-icon {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>input[type="text"],
+    .form-container>.scrollable-container>.form-fields>.form-field>textarea {
+        flex: 1;
+        padding: 5px;
+        border-radius: 5px;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>textarea {
+        resize: none;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>.layers {
+        flex: 1;
+        padding: 5px;
+        margin-right: 10px;
+        position: relative;
+        width: 100%;
+        height: 50px;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>.layers>.layer {
+        position: absolute;
+        width: calc(100% - 10px);
+        height: 40px;
+        background-color: white;
+        border: 2px solid black;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>.layers>.layer:nth-child(1) {
+        top: 0;
+        left: 0;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>.layers>.layer:nth-child(2) {
+        top: 5px;
+        left: 5px;
+    }
+    .form-container>.scrollable-container>.form-fields>.form-field>.layers>.layer:nth-child(3) {
+        top: 10px;
+        left: 10px;
+    }    
+    .form-container>.scrollable-container>.form-fields>.form-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding-left: 20px;
+        padding-right: 50px;
+    }
+    .form-container>.scrollable-container>.form-options>.option {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        border: 2px solid black;
+        border-radius: 50%;
+        text-align: center;
+        font-size: 60%;
+        cursor: pointer;
+    }
+    .form-container>.scrollable-container>.button-container {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+    }
+    .form-container>.scrollable-container>.button-container>.button-icon {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+    }
+
+    .form-container>.scrollable-container>.forms-section {
+        width: 100%;
+        height: 100%;
+        background-color: #f5f5dc;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .form-container>.scrollable-container>.forms-section>.forms {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 5px;
+        background-color: transparent;
+    }
+    .form-container>.scrollable-container>.forms-section>.forms>.card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 10px;
+        background-color: white;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        cursor: pointer;
+    }
+
+    .action-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .action-container>.header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; 
+        background-color: black;
+        color: white;
+        padding: 5px;
+        text-align: center;
+        font-weight: bold;
+    }
+    .action-container>.header .button-icon {
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+    }
+    .action-container>.footer {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        gap: 5px;
+        background-color: #f5f5dc;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .action-container>.scrollable-container {
+        flex-grow: 1;
+        width: 100%;
+        overflow-y: auto;
+        padding: 10px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .action-container>.scrollable-container>.item {
+        position: relative;
+        width: 100%;
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+    }
+    .action-container>.scrollable-container>.item:last-child {
+        border-bottom: none;
+    }
+    .action-container>.scrollable-container>.item>.badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 50%;
+        font-weight: bold;
+    }
+
+    .setting-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .setting-container>.header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; 
+        background-color: black;
+        color: white;
+        padding: 5px;
+        text-align: center;
+        font-weight: bold;
+    }
+    .setting-container>.header .button-icon {
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+    }
+    .setting-container>.footer {
+        width: 100%;
+        height: 100%;
+        background-color: #f5f5dc;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .setting-container>.footer>.forms {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 5px;
+        background-color: transparent;
+    }
+    .setting-container>.footer>.forms>.card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 10px;
+        background-color: white;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        cursor: pointer;
+    }
+    .setting-container>.footer>.options {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 5px;
+        background-color: transparent;
+    }
+    .setting-container>.footer>.options>.card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 10px;
+        background-color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .setting-container>.footer>.options>.card>.text {
+        background-color: transparent; 
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+    .setting-container>.footer>.options>.card>.image {
+        width: 40px;
+        height: 40px;
+    }
+    .setting-container>.footer>.info-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        border: 1px solid lightgray;
+        background-color: lightgray;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        overflow: hidden;
+        position: relative;
+    }
+    .setting-container>.footer>.info-container>.info-content-wrapper {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        box-sizing: border-box;
+    }
+    .setting-container>.footer>.info-container>.info-content-wrapper>.info-content {
+        padding: 10px;
+        text-align: center;
+        word-wrap: break-word;
+    }
+    .setting-container>.scrollable-container {
+        flex-grow: 1;
+        width: 100%;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .setting-container>.scrollable-container>.form-fields {
+        width: 100%;
+    }
+    .setting-container>.scrollable-container>.form-fields>.form-field {
+        display: flex; 
+        flex-direction: row; 
+        align-items: center;
+        width: 100%; 
+        background-color: white; 
+        padding: 3px; 
+    }
+    .setting-container>.scrollable-container>.form-fields>.form-field>.button-icon {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+    }
+    .setting-container>.scrollable-container>.form-fields>.form-field>input[type="text"],
+    .setting-container>.scrollable-container>.form-fields>.form-field>textarea {
+        flex: 1;
+        padding: 5px;
+        border-radius: 5px;
+    }
+    .setting-container>.scrollable-container>.form-fields>.form-field>textarea {
+        resize: none;
+    }
+    .setting-container>.scrollable-container>.form-fields>.form-field>.layers {
+        flex: 1;
+        padding: 5px;
+        margin-right: 10px;
+        position: relative;
+        width: 100%;
+        height: 50px;
+    }
+    .setting-container>.scrollable-container>.form-fields>.form-field>.layers>.layer {
+        position: absolute;
+        width: calc(100% - 10px);
+        height: 40px;
+        background-color: white;
+        border: 2px solid black;
+    }
+    .setting-container>.scrollable-container>.form-fields>.form-field>.layers>.layer:nth-child(1) {
+        top: 0;
+        left: 0;
+    }
+    .setting-container>.scrollable-container>.form-fields>.form-field>.layers>.layer:nth-child(2) {
+        top: 5px;
+        left: 5px;
+    }
+    .setting-container>.scrollable-container>.form-fields>.form-field>.layers>.layer:nth-child(3) {
+        top: 10px;
+        left: 10px;
+    }    
+    .setting-container>.scrollable-container>.form-fields>.form-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding-left: 20px;
+        padding-right: 50px;
+    }
+    .setting-container>.scrollable-container>.form-options>.option {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        border: 2px solid black;
+        border-radius: 50%;
+        text-align: center;
+        font-size: 60%;
+        cursor: pointer;
+    }
+    .setting-container>.scrollable-container>.button-container {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+    }
+    .setting-container>.scrollable-container>.button-container>.button-icon {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+    }
+
+</style>
+
+<script src="./js/jquery-3.4.1.min.js"></script>
+
+<div class="form-container page-container"
+     data-formsID=""
+     data-formID="">
+    <div class="header">
+        <div>
+            <img src="images/backNavigation.png"
+                 class="button-icon"
+                 onclick="getUserActions(); return false;">
+        </div>
+        <div style="cursor: pointer"
+             onclick="newForm(); return false;">
+            <span>Form</span>
+            <img src="images/add.png"
+                 class="button-icon">
+        </div>
+        <div>
+            <img src="images/browse.png"
+                 class="button-icon"
+                 onclick="browseForms(); return false;">
+        </div>
+    </div>
+
+    <div class="submit-field-section"
+         style="display: flex; flex-direction: row; gap: 5px;
+                padding: 5px; align-items: center;">
+    <!--
+        <img src="images/options.png"
+             style="width: 30px; height: 30px; cursor: pointer;"
+             onclick="showSubmitFieldOptions(); return false;">
+    -->
+        <div class="submit-field-type"
+             style="margin-left: 5px; margin-right: 5px; cursor: pointer;"
+             data-type="2"
+             onclick="showSubmitFieldOptions(); return false;">Text</div>
+        <textarea class="field-to-submit" rows="1" 
+                  style="flex: 1; width: 100%; padding: 5px; 
+                         border-radius: 5px; resize: none"></textarea>
+        <img src="images/rightArrow.png"
+             class="submit-field-button"
+             style="width: 30px; height: 30px; cursor: pointer;"
+             onclick="submitRawField(); return false;">
+    </div>
+
+
+    <div class="submit-field-options"
+         style="display: none">
+        <div class="options">
+            <div onclick="changeSubmitFieldType(2); return false;">Text</div>
+            <div onclick="changeSubmitFieldType(3); return false;">Request Action</div>
+        </div>
+    </div>
+
+
+    <div class="scrollable-container"
+         style="position: relative;">
+
+         <div style="position: absolute; top: 20px; right: 20px">
+            <img src="images/addForm.png"
+                 style="width: 50px; height: 50px; cursor: pointer;">
+         </div>
+
+        <div class="form-fields">
+        </div>
+
+        <div class="forms-section"
+             style="display: none;">
+             <div class="forms">
+             </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="footer"
+         style="display: none; height: 50vh">
+        <div class="forms"
+             style="display: none">
+        </div>
+        <div class="options"
+             style="display: none">
+        </div>
+  </div>
+</div>
+
+<div class="action-container page-container"
+     style="display: none">
+    <div class="header">
+        <div></div>
+        <div style="cursor: pointer"
+             onclick="newActionGroup(); return false;">
+            <span>Actions</span>
+            <img src="images/add.png"
+                 class="button-icon">
+        </div>
+        <div></div>
+    </div>
+    <div class="scrollable-container">
+    </div>
+    <div class="footer"
+         style="display: none; height: 50vh">
+    </div>
+</div>
+
+<div class="setting-container page-container"
+     style="display: none">
+    <div class="header">
+        <div></div>
+        <div style="cursor: pointer"
+             onclick="newActionGroup(); return false;">
+            <span>Settings</span>
+            <!--
+            <img src="images/add.png"
+                 class="button-icon">
+            -->
+        </div>
+        <div></div>
+    </div>
+    <div class="scrollable-container">
+    </div>
+    <div class="footer"
+         style="display: none; height: 50vh">
+    </div>
+</div>
+
+<script>
+
+    var baseURL = "http://183.178.96.30/YuHingTesting1/api/Mobile/ActionFormsAPI/";
+
+    $(document).ready(function () {
+
+//        authorizeUser();
+
+
+
+        /*
+        $(document).on('click', function(event) {
+            if ($('.form-container').find('.footer').find('.options').is(':visible')) {
+                showFormsFooter();
+            }
+        });
+        */
+
+
+        $(window).on("resize", function() {
+            adjustTextAreaRows($('.field-to-submit'));
+        });        
+
+        $('.field-to-submit').on('input', function() {
+            validateSubmitFieldAction();
+            adjustTextAreaRows($(this));
+        });
+
+        $('.form-container').on('input', 'input, textarea', function() {
+            validateSaveAction();
+        });
+    });
+
+    function authorizeUser() {
+        $.ajax({
+            url: baseURL + 'AuthorizeUser',
+            type: "post",
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.status == 'success') 
+                {
+                    openActionForms(result.model.formsID);
+                }
+                else {
+                    alert("User not authorized !");
+                }
+            },
+            error: function (result) {
+                alert('Authorization error !')
+            },
+        });
+    }
+
+    function getActionForm() {
+        $('.form-container').find('.scrollable-container').find('.form-fields').html('');
+        var model = {
+            formsID: $('.form-container').attr('data-formsID'),
+            formID: $('.form-container').attr('data-formID'),
+        };
+        $.ajax({
+            url: baseURL + 'GetActionForm',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == "success") {
+                    result.model.fields.forEach(function (item) {
+                        addFormField(item.fieldID, item.type, item.value);
+                    });
+                    validateSubmitFieldAction();
+                    validateSaveAction();
+                    showPage('form-container');
+                }
+            },
+            error: function (result) {
+                alert('Server communication error!');
+            },
+        });
+    }
+
+    function newForm() {
+        $('.form-container').attr('data-formID', '');
+        getActionForm();
+    }
+
+    function openActionForms(formsID) {
+        var container = $('.form-container');
+        container.attr('data-formsID', formsID);
+        newForm();
+        getActionForms('');
+    }
+
+    function getUserActions() {
+        $('.action-container').find('.scrollable-container').html('');
+        $.ajax({
+            url: baseURL + 'GetUserActions',
+            type: "post",
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.status == 'success') {
+                    result.model.fields.forEach(function (item) {
+                        var container = $('.action-container').find('.scrollable-container');
+                        var itemContainer = $('<div>', {
+                            class: 'item',
+                            text: item.title,
+                            'data-formsID': item.formsID
+                        }).appendTo(container);
+                        itemContainer.click(function() {
+                            openActionForms($(this).attr('data-formsID'));
+                        });
+                        var badgeCount = item.totalPendingForms;
+                        if (badgeCount > 0) {
+                            var badge = $('<div>', {
+                                class: 'badge',
+                                text: badgeCount > 99 ? "99+" : badgeCount.toString()
+                            }).appendTo(itemContainer);
+                        }
+                    });
+                    showPage('action-container');
+                }
+            },
+            error: function (result) {
+                alert('Server communication error!');
+            },
+        });
+    }
+
+    function showFormsFooter()  {
+        $('.form-container').find('.footer').find('.forms').show();
+        $('.form-container').find('.footer').find('.options').hide();
+    }
+
+    function showOptionsFooter()  {
+        $('.form-container').find('.footer').find('.forms').hide();
+        $('.form-container').find('.footer').find('.options').show();
+    }
+
+    function getActionForms(visibleFormID) {
+        $('.form-container').find('.footer').find('.forms').html('');
+        var model = {
+            formsID: $('.form-container').attr('data-formsID'),
+            searchKey: ''
+        };
+        $.ajax({
+            url: baseURL + 'GetActionForms',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == "success") {
+                    result.model.fields.forEach(function (item) {
+                        var container = $('.form-container').find('.footer').find('.forms');
+                        var backgroundColor = "white";
+                        if (item.status == "0") {
+                            backgroundColor = "#E0FFFF";
+                        }
+                        var card = $('<div>', {
+                            class: 'card',
+                            text: item.content, 
+                            css: {
+                                'background-color': backgroundColor
+                            },   
+                            'data-formID': item.formID
+                        });
+                        card.appendTo(container);
+                        card.click(function() {
+                            $('.form-container').attr('data-formID', $(this).attr('data-formID'));
+                            getActionForm();
+                        });
+                        showFormsFooter();
+
+                        if (visibleFormID != '') {
+                            var card = $('.card[data-formID="' + visibleFormID + '"]');
+                            if (card.length) {
+                                container.scrollTop(
+                                    card.offset().top - container.offset().top + container.scrollTop()
+                                );
+                            }
+                        }
+                    });
+                }
+            },
+            error: function (result) {
+                alert('Server communication error!');
+            },
+        });
+    }
+
+    function saveActionForm() {
+        var model = {
+            formsID: $('.form-container').attr('data-formsID'),
+            formID: $('.form-container').attr('data-formID'),
+            fields: []
+        };
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
+        container.children('.form-field').each(function(){
+            var type = parseInt($(this).attr('data-type'));
+            var value = '';
+            if (type == 1) {
+                value = $(this).find('input').val();
+            }
+            else if (type == 2) {
+                value = $(this).find('textarea').val();
+            }
+            var field = {
+                fieldID: $(this).attr('data-fieldID'),
+                type: type,
+                value: value
+            };
+            model.fields.push(field);
+        });
+        $.ajax({
+            url: baseURL + 'SaveActionForm',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == 'success') {
+                    var formID = result.model.formID;
+                    newForm();
+                    getActionForms(formID);
+                }
+                else {
+                    alert('Data submission error (2)!')
+                }
+            },
+            error: function (result) {
+                alert('Data submission error (1)!')
+            },
+        });
+    }
+
+    function validateSubmitFieldAction() {
+        var canSave = false;
+        if ($('.field-to-submit').val().trim() != '') {
+            canSave = true;
+        }
+        if (canSave) {
+            $('.submit-field-button').show();
+        }
+        else {
+            $('.submit-field-button').hide();
+        }
+    }
+
+    function validateSaveAction() {
+        var canSave = false;
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
+        container.children('.form-field').each(function(){
+            var type = parseInt($(this).attr('data-type'));
+            if (type == 1) {
+                if ($(this).find('input').val().trim() != '') {
+                    canSave = true;
+                    return false;
+                }
+            }
+            else if (type == 2) {
+                if ($(this).find('textarea').val().trim() != '') {
+                    canSave = true;
+                    return false;
+                }
+            }
+        });
+        if (canSave) {
+            $('.save-action').show();
+        }
+        else {
+            $('.save-action').hide();
+        }
+    }
+
+    function copyFormFieldValue(fieldID, value) {
+        var formFields = $('.form-container').find('.scrollable-container').find('.form-fields');
+        formFields.children('.form-field').each(function(){
+            if ($(this).attr('data-fieldID') == fieldID) {
+                var type = parseInt($(this).attr('data-type'));
+                if (type == 1) {
+                    $(this).find('input').val(value);
+                }
+                else if (type == 2) {
+                    value = $(this).find('textarea').val(value);
+                }
+                validateSaveAction();
+                return false;
+            }
+        });
+    }
+
+    function showFieldOptions(elem) {
+        $('.form-container').find('.footer').find('.options').html('');
+        var field = $(elem).closest('.form-field');
+        var fieldID = field.attr('data-fieldID');
+        var model = {
+            formsID: $('.form-container').attr('data-formsID'),
+            fieldID: fieldID
+        };
+        $.ajax({
+            url: baseURL + 'GetActionFormFields',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == "success") {
+                    result.model.fields.forEach(function (item) {
+                        var container = $('.form-container').find('.footer').find('.options');
+                        var backgroundColor = "white";
+                        var card = $('<div>', {
+                            class: 'card',
+                            'data-fieldID': item.fieldID,
+                            'data-value': item.value
+                        });
+                        card.appendTo(container);
+                        card.click(function() {
+                            copyFormFieldValue($(this).attr('data-fieldID'), $(this).attr('data-value'));
+                            showFormsFooter();
+                        });
+
+                        $('<div>', {
+                            class: 'text',
+                            text: item.value
+                        }).appendTo(card);
+                        $('<img>', {
+                            src: 'images/select.png',
+                            class: 'image',
+                        }).appendTo(card);
+                    });
+                    showOptionsFooter();
+                }
+            },
+            error: function (result) {
+                alert('Server communication error!');
+            },
+        });
+    }
+
+    function addFormField(fieldID, type, value) {
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
+        var fieldContainer = $('<div>', {
+            class: 'form-field',
+            'data-fieldID': fieldID,
+            'data-type': type
+        }).appendTo(container);
+
+        if (type == 1) {
+            getTextField(value).appendTo(fieldContainer);
+        }
+        else if (type == 2) {
+            getTextAreaField(value).appendTo(fieldContainer);
+        }
+        
+        var imgDiv = $('<img>', {
+            src: 'images/search.png',
+            class: 'button-icon',
+        }).appendTo(fieldContainer);
+        imgDiv.click(function() {
+            showFieldOptions(this);
+        });
+
+        /*
+        var optionsContainer = $('<div>', {
+            class: 'form-options',
+            css: { display: 'none' }
+        }).appendTo(container);
+        var textOption = $('<div>', {
+            class: 'option',
+            text: 'Text',
+            'data-type': '1'
+        }).appendTo(optionsContainer);
+        textOption.click(function() {
+            changeFormFieldType(this)
+        });
+        var formsOption = $('<div>', {
+            class: 'option',
+            text: 'Forms',
+            'data-type': '2'
+        }).appendTo(optionsContainer);
+        formsOption.click(function() {
+            changeFormFieldType(this)
+        });
+
+        var scrollableContainer = $('.form-container').find('.scrollable-container');
+        var addButton = scrollableContainer.find('.button-container');
+        scrollableContainer.animate({
+            scrollTop: addButton.offset().top - scrollableContainer.offset().top + scrollableContainer.scrollTop()
+        }, 500);
+        */
+    }
+
+//**************************************************
+
+    /*
+    function submitForm() {
+        var model = {
+            formsID: 29,
+            formID: '',
+            fields: []
+        };
+        var fieldID = 1;
+        var formTitle = "";
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
+        container.children('.form-field').each(function(){
+            var field = {
+                fieldID: fieldID,
+                type: 1,
+                value: ''
+            };
+            var type = parseInt($(this).attr('data-type'));
+            if (type == 1) {
+                field.value = $(this).find('input').val();
+                if (formTitle == '') {
+                    formTitle = field.value;
+                }
+            }
+            model.fields.push(field);
+            fieldID++;
+        });
+        $.ajax({
+            url: baseURL + 'SaveActionForm',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == 'success') {
+                    refreshForm(formTitle);
+                }
+                else {
+                    alert('未能存入 !')
+                }
+            },
+            error: function (result) {
+                alert('未能送出 !')
+            },
+        });
+    }
+    */
+
+    function getTextField(value) {
+        return $('<input>', {
+            type: 'text',
+            placeholder: 'Text',
+            value: value
+        });
+    }
+
+    function getTextAreaField(value) {
+        return $('<textarea>', {
+            placeholder: "Multiple Lines Text",
+            text: value
+        });
+    }
+
+    function getFormsField() {
+        var layers = $('<div>', {
+            class: 'layers',
+        });
+        $('<div>', {
+            class: 'layer',
+        }).appendTo(layers);
+        $('<div>', {
+            class: 'layer',
+        }).appendTo(layers);
+        $('<div>', {
+            class: 'layer',
+        }).appendTo(layers);
+        return layers;
+    }
+
+    function changeFormFieldType(elem) {
+        var type = parseInt($(elem).attr('data-type'));
+        var options = $(elem).closest('.form-options');
+        var formField = options.prev();
+        formField.attr('data-type', type);
+        if (type == 1) {
+            formField.children().first().replaceWith(getTextField());
+        }
+        else if (type == 2) {
+            formField.children().first().replaceWith(getFormsField());
+        }
+        options.hide();
+    }
+
+    function submitForm() {
+        var model = {
+            formsID: 29,
+            formID: '',
+            fields: []
+        };
+        var fieldID = 1;
+        var formTitle = "";
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
+        container.children('.form-field').each(function(){
+            var field = {
+                fieldID: fieldID,
+                type: 1,
+                value: ''
+            };
+            var type = parseInt($(this).attr('data-type'));
+            if (type == 1) {
+                field.value = $(this).find('input').val();
+                if (formTitle == '') {
+                    formTitle = field.value;
+                }
+            }
+            model.fields.push(field);
+            fieldID++;
+        });
+        $.ajax({
+            url: baseURL + 'SaveActionForm',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == 'success') {
+                    refreshForm(formTitle);
+                }
+                else {
+                    alert('未能存入 !')
+                }
+            },
+            error: function (result) {
+                alert('未能送出 !')
+            },
+        });
+    }
+
+    function refreshForm(fieldValue) {
+        $('<div>', {
+            class: 'card',
+            text: fieldValue,
+        }).prependTo($('.form-container').find('.footer').find('.forms'));
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
+        container.find('input').val('');
+        container.find('textarea').val('');
+        $('.form-container').find('.footer').find('.forms').show();
+    }
+
+    function showFullForm() {
+        $('.form-container').find('.footer').find('.forms').hide();
+    }
+
+    /*
+    function getActionForms() {
+        $('.form-container').find('.footer').html('');
+        var model = {
+            formsID: 29,
+            searchKey: ''
+        };
+        $.ajax({
+            url: baseURL + 'GetActionForms',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == "success") {
+                    var fields = [];
+                    result.model.fields.forEach(function (item) {
+                        var field = {
+                            formID: item.formID,
+                            formTitle: item.formTitle
+                        };
+                        fields.push(field);
+                    });
+                    for (var i = 0; i < fields.length; i++) {
+                        $('<div>', {
+                            class: 'card',
+                            text: fields[i].formTitle,
+                            'data-id': fields[i].formID
+                        }).appendTo($('.form-container').find('.footer'));
+                    }
+                    $('.form-container').find('.footer').show();
+                }
+            },
+            error: function (result) {
+
+                alert('error');
+
+            },
+        });
+    }
+
+    function getActionForm() {
+        var model = {
+            formsID: 29,
+            formID: 'cb154a9e-4e7f-4c54-9211-bea30fa6442b'
+        };
+
+        $.ajax({
+            url: baseURL + 'GetActionForm',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == "success") {
+                    var fields = [];
+
+        //                    alert(result.model.fields.length);
+
+                    result.model.fields.forEach(function (item) {
+                        var field = {
+                            fieldID: item.fieldID,
+                            type: item.type,
+                            value: item.value
+                        };
+                        fields.push(field);
+
+                                alert(field.fieldID + ' - ' + field.type + ' - ' + field.value);
+
+                    });
+                }
+            },
+            error: function (result) {
+
+                alert('error');
+
+            },
+        });
+    }
+        */
+
+    function addActionItem(title, number) {
+        var container = $('.action-container').find('.scrollable-container');
+        var itemContainer = $('<div>', {
+            class: 'item',
+            text: title
+        }).appendTo(container);
+        itemContainer.click(function() {
+            showActionItems();
+        });
+
+        var badge = $('<div>', {
+            class: 'badge',
+            text: number > 99 ? "99+" : number.toString()
+        }).appendTo(itemContainer);
+        badge.click(function(event) {
+            showPendingActionItems(event);
+        });
+    }
+
+    function showActionItems() {
+        $('.action-container').find('.footer').find('.forms').show();
+    }
+
+    function showPendingActionItems(event) {
+        event.stopPropagation();
+        $('.action-container').find('.footer').find('.forms').show();
+    }
+
+    function openOptionsSection(elem) {
+        var container = $(elem).closest('.form-field').next();
+        if (container.is(':visible')) {
+            container.hide();
+        } 
+        else {
+            container.show();
+        }
+    }
+
+    //*******************************************************
+
+    function newActionGroup() {
+        $.ajax({
+            url: baseURL + 'AddActionGroup',
+            type: "post",
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.status == 'success') {
+                    $('.action-container').find('.scrollable-container').html('');
+                    result.model.fields.forEach(function (item) {
+                        var container = $('.action-container').find('.scrollable-container');
+                        var itemContainer = $('<div>', {
+                            class: 'item',
+                            text: item.title,
+                            'data-formsID': item.formsID
+                        }).appendTo(container);
+                        itemContainer.click(function() {
+                            openActionForms($(this).attr('data-formsID'));
+                        });
+                        var badgeCount = item.totalPendingForms;
+                        if (badgeCount > 0) {
+                            var badge = $('<div>', {
+                                class: 'badge',
+                                text: badgeCount > 99 ? "99+" : badgeCount.toString()
+                            }).appendTo(itemContainer);
+                        }
+                    });
+                    $('.form-container').hide();
+                    $('.action-container').show();
+                }
+            },
+            error: function (result) {
+                alert('Server communication error!');
+            },
+        });
+    }
+
+    function openSettingPage() {
+        showPage('setting-container');
+    }
+
+    function showPage(pageName) {
+        $('.page-container').hide();
+        $('.' + pageName).show();
+    }
+
+    function addFormRawField(fieldID, type, value) {
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
+        $('<div>', {
+            class: 'raw-field',
+            text: value
+        }).appendTo(container);
+    }
+
+    function addFormRequestActionField(fieldID, type, value) {
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
+        var fieldContainer = $('<div>', {
+            class: 'request-action'
+        }).appendTo(container);
+        $('<div style="flex: 1"></div>').appendTo(fieldContainer);
+        $('<div class="user" style="margin-left: 10px; margin-right: 10px;"></div>').appendTo(fieldContainer);
+        var button = $('<button>', {
+            class: 'button',
+            text: 'Request - ' + value
+        }).appendTo(fieldContainer);
+        button.click(function() {
+            var email = prompt("Please enter user email", "");
+            if (email != null) {
+                $(this).closest('.request-action').find('.user').text(email);
+            }
+        });
+    }
+
+    function submitRawField() {
+        var value = $('.field-to-submit').val();
+        if (value.trim() != '') {
+            var type = parseInt($('.submit-field-type').attr('data-type'));
+            if (type == 2) {
+                addFormRawField('', type, value);
+            }
+            else if (type == 3) {
+                addFormRequestActionField('', type, value);
+            }
+            $('.field-to-submit').val('');
+            adjustTextAreaRows($('.field-to-submit'));
+            validateSubmitFieldAction();
+
+            $('.submit-field-type').text('Text');
+            $('.submit-field-type').attr('data-type', '2');
+        }
+    }
+
+    function adjustTextAreaRows(field) {
+        var textArea = field[0];
+        textArea.style.height = 0;
+        var lht = parseInt(field.css('lineHeight'),10);
+        var height = textArea.scrollHeight;
+        if (textArea.scrollHeight > lht * 5) {
+            height = lht * 5;
+        }
+        textArea.style.height = height + 'px';
+    }
+
+    function showSubmitFieldOptions() {
+        $('.submit-field-options').show();
+    }
+
+    function changeSubmitFieldType(type) {
+        if (type == 2) {
+            $('.submit-field-type').text('Text');
+        } else {
+            $('.submit-field-type').text('Request Action');
+        }
+        $('.submit-field-type').attr('data-type', type);
+        $('.submit-field-options').hide();
+    }
+
+    function browseForms() {
+        var container = $('.form-container').find('.scrollable-container');
+        container.find('.form-fields').hide();
+        container.find('.forms-section').show();
+        getActionForms1('');
+    }
+
+    function getActionForms1(visibleFormID) {
+        var model = {
+            formsID: $('.form-container').attr('data-formsID'),
+            searchKey: ''
+        };
+        $.ajax({
+            url: baseURL + 'GetActionForms',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == "success") {
+                    var container = $('.form-container').find('.scrollable-container').find('.forms-section').find('.forms');
+                    container.html('');
+                    result.model.fields.forEach(function (item) {
+                        var backgroundColor = "white";
+                        if (item.status == "0") {
+                            backgroundColor = "#E0FFFF";
+                        }
+                        var card = $('<div>', {
+                            class: 'card',
+                            text: item.content, 
+                            css: {
+                                'background-color': backgroundColor
+                            },   
+                            'data-formID': item.formID
+                        });
+                        card.appendTo(container);
+                        card.click(function() {
+                            $('.form-container').attr('data-formID', $(this).attr('data-formID'));
+                            getActionForm();
+                        });
+                    });
+
+                    if (visibleFormID != '') {
+                            var card = $('.card[data-formID="' + visibleFormID + '"]');
+                            if (card.length) {
+                                container.scrollTop(
+                                    card.offset().top - container.offset().top + container.scrollTop()
+                                );
+                            }
+                        }
+                }
+            },
+            error: function (result) {
+                alert('Server communication error!');
+            },
+        });
+    }
+
+</script>
