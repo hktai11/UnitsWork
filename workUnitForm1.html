@@ -151,6 +151,8 @@
     }
     .form-container>.scrollable-container>.form-fields>.raw-field {
         width: max-content; 
+        min-width: 50px;
+        min-height: 30px;
         margin-bottom: 5px;
         padding-left: 10px; 
         padding-right: 10px;
@@ -577,21 +579,19 @@
             <img src="images/add.png"
                  class="button-icon">
         </div>
+        <div></div>
+        <!--
         <div>
             <img src="images/browse.png"
                  class="button-icon"
                  onclick="browseForms(); return false;">
         </div>
+        -->
     </div>
 
     <div class="submit-field-section"
          style="display: flex; flex-direction: row; gap: 5px;
                 padding: 5px; align-items: center;">
-    <!--
-        <img src="images/options.png"
-             style="width: 30px; height: 30px; cursor: pointer;"
-             onclick="showSubmitFieldOptions(); return false;">
-    -->
         <div class="submit-field-type"
              style="margin-left: 5px; margin-right: 5px; cursor: pointer;"
              data-type="2"
@@ -614,22 +614,10 @@
         </div>
     </div>
 
-
     <div class="scrollable-container"
          style="position: relative;">
 
-         <div style="position: absolute; top: 20px; right: 20px">
-            <img src="images/addForm.png"
-                 style="width: 50px; height: 50px; cursor: pointer;">
-         </div>
-
         <div class="form-fields">
-        </div>
-
-        <div class="forms-section"
-             style="display: none;">
-             <div class="forms">
-             </div>
         </div>
 
     </div>
@@ -693,18 +681,8 @@
 
     $(document).ready(function () {
 
-//        authorizeUser();
-
-
-
-        /*
-        $(document).on('click', function(event) {
-            if ($('.form-container').find('.footer').find('.options').is(':visible')) {
-                showFormsFooter();
-            }
-        });
-        */
-
+        authorizeUser();
+        validateSubmitFieldAction();
 
         $(window).on("resize", function() {
             adjustTextAreaRows($('.field-to-submit'));
@@ -746,37 +724,44 @@
             formsID: $('.form-container').attr('data-formsID'),
             formID: $('.form-container').attr('data-formID'),
         };
-        $.ajax({
-            url: baseURL + 'GetActionForm',
-            type: "post",
-            contentType: 'application/json',
-            data: JSON.stringify(model),
-            success: function (result) {
-                if (result.status == "success") {
-                    result.model.fields.forEach(function (item) {
-                        addFormField(item.fieldID, item.type, item.value);
-                    });
-                    validateSubmitFieldAction();
-                    validateSaveAction();
-                    showPage('form-container');
-                }
-            },
-            error: function (result) {
-                alert('Server communication error!');
-            },
-        });
+
+        if (formID != "") {
+            $.ajax({
+                url: baseURL + 'GetActionForm',
+                type: "post",
+                contentType: 'application/json',
+                data: JSON.stringify(model),
+                success: function (result) {
+                    if (result.status == "success") {
+                        result.model.fields.forEach(function (item) {
+                            if (item.type == 2) {
+                                addFormRawField(item.fieldID, item.type, item.value);
+                            }
+                            else if (item.type == 3) {
+                                addFormRequestActionField(item.fieldID, item.type, item.value);
+                            }
+                        });
+                        validateSubmitFieldAction();
+                        showPage('form-container');
+                    }
+                },
+                error: function (result) {
+                    alert('Server communication error!');
+                },
+            });
+        }
     }
 
     function newForm() {
         $('.form-container').attr('data-formID', '');
-        getActionForm();
+        getNewActionForm();
     }
 
     function openActionForms(formsID) {
         var container = $('.form-container');
         container.attr('data-formsID', formsID);
         newForm();
-        getActionForms('');
+//        getActionForms('');
     }
 
     function getUserActions() {
@@ -1022,6 +1007,7 @@
         });
     }
 
+    /*
     function addFormField(fieldID, type, value) {
         var container = $('.form-container').find('.scrollable-container').find('.form-fields');
         var fieldContainer = $('<div>', {
@@ -1044,36 +1030,8 @@
         imgDiv.click(function() {
             showFieldOptions(this);
         });
-
-        /*
-        var optionsContainer = $('<div>', {
-            class: 'form-options',
-            css: { display: 'none' }
-        }).appendTo(container);
-        var textOption = $('<div>', {
-            class: 'option',
-            text: 'Text',
-            'data-type': '1'
-        }).appendTo(optionsContainer);
-        textOption.click(function() {
-            changeFormFieldType(this)
-        });
-        var formsOption = $('<div>', {
-            class: 'option',
-            text: 'Forms',
-            'data-type': '2'
-        }).appendTo(optionsContainer);
-        formsOption.click(function() {
-            changeFormFieldType(this)
-        });
-
-        var scrollableContainer = $('.form-container').find('.scrollable-container');
-        var addButton = scrollableContainer.find('.button-container');
-        scrollableContainer.animate({
-            scrollTop: addButton.offset().top - scrollableContainer.offset().top + scrollableContainer.scrollTop()
-        }, 500);
-        */
     }
+        */
 
 //**************************************************
 
@@ -1393,16 +1351,21 @@
 
     function addFormRawField(fieldID, type, value) {
         var container = $('.form-container').find('.scrollable-container').find('.form-fields');
-        $('<div>', {
+        var fieldContainer = $('<div>', {
             class: 'raw-field',
-            text: value
+            text: value,
+            'data-fieldID': fieldID,
+            'data-type': type
         }).appendTo(container);
+        return fieldContainer;
     }
 
     function addFormRequestActionField(fieldID, type, value) {
         var container = $('.form-container').find('.scrollable-container').find('.form-fields');
         var fieldContainer = $('<div>', {
-            class: 'request-action'
+            class: 'request-action',
+            'data-fieldID': fieldID,
+            'data-type': type
         }).appendTo(container);
         $('<div style="flex: 1"></div>').appendTo(fieldContainer);
         $('<div class="user" style="margin-left: 10px; margin-right: 10px;"></div>').appendTo(fieldContainer);
@@ -1416,17 +1379,19 @@
                 $(this).closest('.request-action').find('.user').text(email);
             }
         });
+        return fieldContainer;
     }
 
     function submitRawField() {
         var value = $('.field-to-submit').val();
         if (value.trim() != '') {
+            var fieldContainer = null;
             var type = parseInt($('.submit-field-type').attr('data-type'));
             if (type == 2) {
-                addFormRawField('', type, value);
+                fieldContainer = addFormRawField('', type, '');
             }
             else if (type == 3) {
-                addFormRequestActionField('', type, value);
+                fieldContainer = addFormRequestActionField('', type, '');
             }
             $('.field-to-submit').val('');
             adjustTextAreaRows($('.field-to-submit'));
@@ -1434,6 +1399,38 @@
 
             $('.submit-field-type').text('Text');
             $('.submit-field-type').attr('data-type', '2');
+
+            if (fieldContainer != null) {
+                var model = {
+                    formsID: $('.form-container').attr('data-formsID'),
+                    formID: $('.form-container').attr('data-formID'),
+                    field: {
+                        fieldID: '',
+                        type: type,
+                        value: value
+                    }
+                };
+                $.ajax({
+                    url: baseURL + 'SaveActionFormField',
+                    type: "post",
+                    contentType: 'application/json',
+                    data: JSON.stringify(model),
+                    success: function (result) {
+                        if (result.status == "success") {
+                            $('.form-container').attr('data-formID', result.model.formID);
+                            if (fieldContainer.attr('data-type') == result.model.field.type) {
+                                fieldContainer.attr('data-fieldID', result.model.field.fieldID);
+                                fieldContainer.text(result.model.field.value);
+                            }
+                        }
+                    },
+                    error: function (result) {
+
+                        alert('error');
+
+                    },
+                });
+            }
         }
     }
 
@@ -1511,6 +1508,36 @@
                                 );
                             }
                         }
+                }
+            },
+            error: function (result) {
+                alert('Server communication error!');
+            },
+        });
+    }
+
+    function getNewActionForm() {
+        $('.form-container').find('.scrollable-container').find('.form-fields').html('');
+        var model = {
+            formsID: $('.form-container').attr('data-formsID')
+        };
+        $.ajax({
+            url: baseURL + 'GetNewActionForm',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == "success") {
+                    result.model.fields.forEach(function (item) {
+                        if (item.type == 2) {
+                            addFormRawField(item.fieldID, item.type, item.value);
+                        }
+                        else if (item.type == 3) {
+                            addFormRequestActionField(item.fieldID, item.type, item.value);
+                        }
+                    });
+                    validateSubmitFieldAction();
+                    showPage('form-container');
                 }
             },
             error: function (result) {
