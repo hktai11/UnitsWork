@@ -859,7 +859,7 @@
             },
         });
     }
-
+/*
     function saveActionForm() {
         var model = {
             formsID: $('.form-container').attr('data-formsID'),
@@ -903,6 +903,7 @@
             },
         });
     }
+*/
 
     function validateSubmitFieldAction() {
         var canSave = false;
@@ -1544,6 +1545,61 @@
                 alert('Server communication error!');
             },
         });
+    }
+
+    function saveActionForm() {
+        var model = {
+            formsID: $('.form-container').attr('data-formsID'),
+            formID: $('.form-container').attr('data-formID'),
+            fields: []
+        };
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
+        container.children('div').each(function(){
+            var type = 0;
+            var fieldID = '';
+            var value = '';
+            if ($(this).hasClass('raw-field')) {
+                fieldID = $(this).attr('data-fieldID');
+                type = parseInt($(this).attr('data-type'));
+                value = $(this).text();
+            }
+            if (type > 0) {
+                var field = {
+                    fieldID: fieldID,
+                    type: type,
+                    value: value
+                };
+                model.fields.push(field);
+            }
+        });
+
+        for (var i = 0; i < model.fields.length; i++) {
+
+            alert(modeil.fields[i].fieldID + ' - ' + model.fields[i].type + ' - ' + model.fields[i].value);
+
+        }
+
+        /*
+        $.ajax({
+            url: baseURL + 'SaveActionForm',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == 'success') {
+                    var formID = result.model.formID;
+                    newForm();
+                    getActionForms(formID);
+                }
+                else {
+                    alert('Data submission error (2)!')
+                }
+            },
+            error: function (result) {
+                alert('Data submission error (1)!')
+            },
+        });
+        */
     }
 
 </script>
