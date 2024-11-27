@@ -30,23 +30,23 @@
         text-align: center;
         font-weight: bold;
     }
-    .form-container>.header .button-icon {
+    .form-container>.header * .button-icon {
         width: 30px;
         height: 30px;
         cursor: pointer;
     }
 
-    .form-container>.submit-field-options {
+    .submit-field-options {
         width: 100%;
     }
-    .form-container>.submit-field-options>.options {
+    .submit-field-options> .options {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
         background-color: lightgray;
         padding: 5px;
     }
-    .form-container>.submit-field-options>.options > * {
+    .submit-field-options> .options > * {
         box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 5px 8px 0 rgba(0,0,0,.14), 0 1px 14px 0 rgba(0,0,0,.12);
         padding: 5px 10px;
         border-radius: 10px;
@@ -54,10 +54,10 @@
         white-space: nowrap;
         color: #666;
     }
-    .form-container>.submit-field-options>.options > div:not(:last-child) {
+    .submit-field-options> .options > div:not(:last-child) {
         margin-right: 0px;
     }
-    .form-container>.submit-field-options>.options > div {
+    .submit-field-options> .options > div {
         background-color: white;
     }
 
@@ -146,19 +146,20 @@
         height: 100%;
         padding: 10px;
     }
-    .form-container>.scrollable-container>.fields-container>.form-fields {
+    
+    .form-fields {
         width: 100%;
         overflow-y: auto;
-
-        border: 2px solid red;
     }
-    .form-container>.scrollable-container>.fields-container>.parent-form-fields {
+    .parent-form-fields {
         width: 100%;
         overflow-y: auto;
-
-        border: 2px solid blue;
     }
-    .form-container * .raw-field {
+    .raw-field-container {
+        display: flex; 
+        flex-direction: row;        
+    }
+    .raw-field {
         width: max-content; 
         min-width: 50px;
         min-height: 30px;
@@ -171,31 +172,12 @@
         background-color: #f5f5dc;
         white-space: pre-line;
     }
-    .form-container>.scrollable-container>.fields-container>.form-fields>.raw-field-container>.raw-field {
-        width: max-content; 
-        min-width: 50px;
-        min-height: 30px;
-        margin-bottom: 5px;
-        padding-left: 10px; 
-        padding-right: 10px;
-        padding-top: 5px; 
-        padding-bottom: 5px; 
-        border-radius: 10px;
-        background-color: #f5f5dc;
-        white-space: pre-line;
+    .raw-field-container {
+        display: flex; 
+        flex-direction: row;        
     }
-    .form-container>.scrollable-container>.fields-container>.parent-form-fields>.raw-field-container>.raw-field {
-        width: max-content; 
-        min-width: 50px;
-        min-height: 30px;
-        margin-bottom: 5px;
-        padding-left: 10px; 
-        padding-right: 10px;
-        padding-top: 5px; 
-        padding-bottom: 5px; 
-        border-radius: 10px;
-        background-color: #f5f5dc;
-        white-space: pre-line;
+    .dummy-field {
+        flex: 1;
     }
 
     .form-container>.scrollable-container>.form-fields>.request-action {
@@ -653,119 +635,20 @@
          style="position: relative;">
 
          <div class="fields-container"
-               style="position: absolute; display: flex; flex-direction: column;
+              style="position: absolute; display: flex; flex-direction: column;
                       left: 10px; right: 10px; top: 0; bottom: 0; 
                       overflow-y: hidden;">
 
-         <div class="form-fields">
-
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div class="raw-field">primary card 1</div>
-                 <div style="flex: 1;"></div>
+            <div class="form-fields">
             </div>
 
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div class="raw-field">primary card 2</div>
-                 <div style="flex: 1;"></div>
-            </div>
-<!--
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div class="raw-field">primary card 3</div>
-                 <div style="flex: 1;"></div>
-            </div>
+            <div style="width: 100%; height: 3px; margin-bottom: 5px;
+                        background-color:antiquewhite;"></div>
 
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div class="raw-field">primary card 4</div>
-                 <div style="flex: 1;"></div>
+            <div class="parent-form-fields">
             </div>
-
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div class="raw-field">primary card 5</div>
-                 <div style="flex: 1;"></div>
-            </div>
-
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div class="raw-field">primary card 6</div>
-                 <div style="flex: 1;"></div>
-            </div>
-
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div class="raw-field">primary card 7</div>
-                 <div style="flex: 1;"></div>
-            </div>
-        
-        -->
+                    
         </div>
-
-        <div class="parent-form-fields">
-
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div style="flex: 1"></div>
-                 <div class="raw-field">parent card 1</div>
-            </div>
-
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div style="flex: 1"></div>
-                 <div class="raw-field">parent card 2</div>
-            </div>
-
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div style="flex: 1"></div>
-                 <div class="raw-field">parent card 3</div>
-            </div>
-
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div style="flex: 1"></div>
-                 <div class="raw-field">parent card 4</div>
-            </div>
-
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div style="flex: 1"></div>
-                 <div class="raw-field">parent card 5</div>
-            </div>
-
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div style="flex: 1"></div>
-                 <div class="raw-field">parent card 6</div>
-            </div>
-
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div style="flex: 1"></div>
-                 <div class="raw-field">parent card 7</div>
-            </div>
-
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div style="flex: 1"></div>
-                 <div class="raw-field">parent card 8</div>
-            </div>
-
-            <div class="raw-field-container"
-                 style="display: flex; flex-direction: row;">
-                 <div style="flex: 1"></div>
-                 <div class="raw-field">parent card 9</div>
-            </div>
-        
-
-        </div>
-                   
-                
-        </div>
-
 
     </div>
 
@@ -779,7 +662,8 @@
         <div class="options"
              style="display: none">
         </div>
-  </div>
+    </div>
+
 </div>
 
 <div class="action-container page-container"
@@ -830,6 +714,8 @@
 
 //        authorizeUser();
 //        validateSubmitFieldAction();
+
+        getActionFormWithLink();
 
         $(window).on("resize", function() {
             adjustTextAreaRows($('.field-to-submit'));
@@ -1747,6 +1633,76 @@
             },
         });
         */
+    }
+
+    function getActionFormWithLink() {
+        /*
+        var model = {
+            formsID: $('.form-container').attr('data-formsID'),
+            formID: $('.form-container').attr('data-formID'),
+        };
+        */
+
+        var model = {
+            formsID: '27196cec-392f-4aff-b580-c2766b0c996b*d437f8e0-2421-4fed-b1b9-59fb2404f48d',
+            formID: '154e5a91-fda2-4fa9-a5fe-2b6947de4cc7'
+        };
+
+        $.ajax({
+            url: baseURL + 'GetActionForm',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == "success") {
+
+                    var formsContainer = $('.form-container').find('.scrollable-container').find('.form-fields');
+                    var parentFormsContainer = $('.form-container').find('.scrollable-container').find('.parent-form-fields');
+                    formsContainer.html('');
+                    parentFormsContainer.html('');
+
+                    result.model.fields.forEach(function (item) {
+                        if (item.type == 2) {
+                            var fieldContainer = $('<div>', {
+                                class: 'raw-field-container',
+                                'data-fieldID': item.fieldID,
+                                'data-type': item.type
+                            }).appendTo(formsContainer);
+                            $('<div>', {
+                                class: 'raw-field',
+                                text: item.value,
+                                'data-formsID': item.formsID
+                            }).appendTo(fieldContainer);
+                            $('<div>', {
+                                class: 'dummy-field'
+                            }).appendTo(fieldContainer);
+                        }
+                    });
+
+                    result.model.parentFormFields.forEach(function (item) {
+                        if (item.type == 2) {
+                            var fieldContainer = $('<div>', {
+                                class: 'raw-field-container',
+                                'data-fieldID': item.fieldID,
+                                'data-type': item.type
+                            }).appendTo(parentFormsContainer);
+                            $('<div>', {
+                                class: 'dummy-field'
+                            }).appendTo(fieldContainer);
+                            $('<div>', {
+                                class: 'raw-field',
+                                text: item.value,
+                                'data-formsID': item.formsID
+                            }).appendTo(fieldContainer);
+                        }
+                    });
+
+                }
+            },
+            error: function (result) {
+                alert('Server communication error!');
+            },
+        });
     }
 
 </script>
