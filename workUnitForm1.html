@@ -14,6 +14,25 @@
         font-size: 20px
     }
 
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border: 3px solid rgba(0, 0, 0, 0.1);
+      border-top: 3px solid #007bff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
     .form-container {
         width: 100%;
         display: flex;
@@ -36,6 +55,35 @@
         cursor: pointer;
     }
 
+    .add-field-button {
+        width: 30px; 
+        height: 30px; 
+        cursor: pointer;        
+    }
+    .submit-field-section {
+        display: flex; 
+        flex-direction: row; 
+        gap: 5px;
+        padding: 5px; 
+        align-items: center;        
+    }
+    .submit-field-type {
+        margin-left: 5px; 
+        margin-right: 5px; 
+        cursor: pointer;
+    }
+    .submit-field-button {
+        width: 30px; 
+        height: 30px; 
+        cursor: pointer;        
+    }
+    .field-to-submit {
+        flex: 1; 
+        width: 100%; 
+        padding: 5px; 
+        border-radius: 5px; 
+        resize: none        
+    }
     .submit-field-options {
         width: 100%;
     }
@@ -61,95 +109,37 @@
         background-color: white;
     }
 
-    .form-container>.footer {
-        width: 100%;
-        height: 100%;
-        background-color: #f5f5dc;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-        overflow-y: auto;
-        padding: 10px;
-    }
-    .form-container>.footer>.forms {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        gap: 5px;
-        background-color: transparent;
-    }
-    .form-container>.footer>.forms>.card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        padding: 10px;
-        background-color: white;
-        border-radius: 5px;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        cursor: pointer;
-    }
-    .form-container>.footer>.options {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        gap: 5px;
-        background-color: transparent;
-    }
-    .form-container>.footer>.options>.card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        padding: 10px;
-        background-color: white;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    .form-container>.footer>.options>.card>.text {
-        background-color: transparent; 
-        white-space: pre-wrap;
-        word-wrap: break-word;
-    }
-    .form-container>.footer>.options>.card>.image {
-        width: 40px;
-        height: 40px;
-    }
-    .form-container>.footer>.info-container {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        border: 1px solid lightgray;
-        background-color: lightgray;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-        overflow: hidden;
-        position: relative;
-    }
-    .form-container>.footer>.info-container>.info-content-wrapper {
-        flex: 1;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-        box-sizing: border-box;
-    }
-    .form-container>.footer>.info-container>.info-content-wrapper>.info-content {
-        padding: 10px;
-        text-align: center;
-        word-wrap: break-word;
-    }
     .form-container>.scrollable-container {
+        position: relative;
         flex-grow: 1;
         width: 100%;
         height: 100%;
         padding: 10px;
     }
-    
+
+    .fields-container {
+        position: absolute; 
+        display: flex; 
+        flex-direction: column;
+        left: 10px; 
+        right: 10px; 
+        top: 0; 
+        bottom: 0; 
+        overflow-y: hidden;        
+    }
+    .forms-separator {
+        width: 100%; 
+        height: 3px; 
+        margin-bottom: 5px;
+        background-color:antiquewhite;        
+    }
     .form-fields {
         width: 100%;
+        min-height: 60px;
         overflow-y: auto;
+    }
+    .form-fields>.raw-field-container {
+        cursor: pointer;
     }
     .parent-form-fields {
         width: 100%;
@@ -179,8 +169,12 @@
     .dummy-field {
         flex: 1;
     }
+    .link-field {
+        background-color: cornflowerblue;
+    }
 
-    .form-container>.scrollable-container>.form-fields>.request-action {
+    /*
+        .form-container>.scrollable-container>.form-fields>.request-action {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -275,6 +269,8 @@
         font-size: 60%;
         cursor: pointer;
     }
+    */
+
     .form-container>.scrollable-container>.button-container {
         width: 100%;
         display: flex;
@@ -387,201 +383,12 @@
         font-weight: bold;
     }
 
-    .setting-container {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-    .setting-container>.header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between; 
-        background-color: black;
-        color: white;
-        padding: 5px;
-        text-align: center;
-        font-weight: bold;
-    }
-    .setting-container>.header .button-icon {
-        width: 30px;
-        height: 30px;
-        cursor: pointer;
-    }
-    .setting-container>.footer {
-        width: 100%;
-        height: 100%;
-        background-color: #f5f5dc;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-        overflow-y: auto;
-        padding: 10px;
-    }
-    .setting-container>.footer>.forms {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        gap: 5px;
-        background-color: transparent;
-    }
-    .setting-container>.footer>.forms>.card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        padding: 10px;
-        background-color: white;
-        border-radius: 5px;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        cursor: pointer;
-    }
-    .setting-container>.footer>.options {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        gap: 5px;
-        background-color: transparent;
-    }
-    .setting-container>.footer>.options>.card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        padding: 10px;
-        background-color: white;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    .setting-container>.footer>.options>.card>.text {
-        background-color: transparent; 
-        white-space: pre-wrap;
-        word-wrap: break-word;
-    }
-    .setting-container>.footer>.options>.card>.image {
-        width: 40px;
-        height: 40px;
-    }
-    .setting-container>.footer>.info-container {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        border: 1px solid lightgray;
-        background-color: lightgray;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-        overflow: hidden;
-        position: relative;
-    }
-    .setting-container>.footer>.info-container>.info-content-wrapper {
-        flex: 1;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-        box-sizing: border-box;
-    }
-    .setting-container>.footer>.info-container>.info-content-wrapper>.info-content {
-        padding: 10px;
-        text-align: center;
-        word-wrap: break-word;
-    }
-    .setting-container>.scrollable-container {
-        flex-grow: 1;
-        width: 100%;
-        overflow-y: auto;
-        padding: 10px;
-    }
-    .setting-container>.scrollable-container>.form-fields {
-        width: 100%;
-    }
-    .setting-container>.scrollable-container>.form-fields>.form-field {
-        display: flex; 
-        flex-direction: row; 
-        align-items: center;
-        width: 100%; 
-        background-color: white; 
-        padding: 3px; 
-    }
-    .setting-container>.scrollable-container>.form-fields>.form-field>.button-icon {
-        width: 40px;
-        height: 40px;
-        cursor: pointer;
-    }
-    .setting-container>.scrollable-container>.form-fields>.form-field>input[type="text"],
-    .setting-container>.scrollable-container>.form-fields>.form-field>textarea {
-        flex: 1;
-        padding: 5px;
-        border-radius: 5px;
-    }
-    .setting-container>.scrollable-container>.form-fields>.form-field>textarea {
-        resize: none;
-    }
-    .setting-container>.scrollable-container>.form-fields>.form-field>.layers {
-        flex: 1;
-        padding: 5px;
-        margin-right: 10px;
-        position: relative;
-        width: 100%;
-        height: 50px;
-    }
-    .setting-container>.scrollable-container>.form-fields>.form-field>.layers>.layer {
-        position: absolute;
-        width: calc(100% - 10px);
-        height: 40px;
-        background-color: white;
-        border: 2px solid black;
-    }
-    .setting-container>.scrollable-container>.form-fields>.form-field>.layers>.layer:nth-child(1) {
-        top: 0;
-        left: 0;
-    }
-    .setting-container>.scrollable-container>.form-fields>.form-field>.layers>.layer:nth-child(2) {
-        top: 5px;
-        left: 5px;
-    }
-    .setting-container>.scrollable-container>.form-fields>.form-field>.layers>.layer:nth-child(3) {
-        top: 10px;
-        left: 10px;
-    }    
-    .setting-container>.scrollable-container>.form-fields>.form-options {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        padding-left: 20px;
-        padding-right: 50px;
-    }
-    .setting-container>.scrollable-container>.form-options>.option {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 50px;
-        height: 50px;
-        border: 2px solid black;
-        border-radius: 50%;
-        text-align: center;
-        font-size: 60%;
-        cursor: pointer;
-    }
-    .setting-container>.scrollable-container>.button-container {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
-    }
-    .setting-container>.scrollable-container>.button-container>.button-icon {
-        width: 40px;
-        height: 40px;
-        cursor: pointer;
-    }
-
 </style>
 
 <script src="./js/jquery-3.4.1.min.js"></script>
 
 <div class="form-container page-container"
+     style="display: none"
      data-formsID=""
      data-formID="">
     <div class="header">
@@ -591,38 +398,32 @@
                  onclick="getUserActions(); return false;">
         </div>
         <div style="cursor: pointer"
-             onclick="newForm(); return false;">
+             onclick="getActionForm(''); return false;">
             <span>Form</span>
             <img src="images/add.png"
                  class="button-icon">
         </div>
         <div></div>
-        <!--
-        <div>
-            <img src="images/browse.png"
-                 class="button-icon"
-                 onclick="browseForms(); return false;">
-        </div>
-        -->
     </div>
 
-    <div class="submit-field-section"
-         style="display: flex; flex-direction: row; gap: 5px;
-                padding: 5px; align-items: center;">
-        <div class="submit-field-type"
-             style="margin-left: 5px; margin-right: 5px; cursor: pointer;"
-             data-type="2"
-             onclick="showSubmitFieldOptions(); return false;">Text</div>
-        <textarea class="field-to-submit" rows="1" 
-                  style="flex: 1; width: 100%; padding: 5px; 
-                         border-radius: 5px; resize: none"></textarea>
+    <div class="submit-field-section form-section"
+         data-fieldID=""
+         data-type="2"
+         data-value="">
+        <img src="images/addField.png"
+             class="add-field-button"
+             onclick="newSubmitField(this); return false;">
+        <div class="submit-field-type submit-field"
+             onclick="changeSubmitFieldType(this); return false;">Fill</div>
+        <textarea class="field-to-submit submit-field" rows="1"></textarea>
         <img src="images/rightArrow.png"
-             class="submit-field-button"
-             style="width: 30px; height: 30px; cursor: pointer;"
-             onclick="submitRawField(); return false;">
+             class="submit-field-button submit-field"
+             onclick="submitFormField(); return false;">
+        <div class="spinner"
+             style="display: none;"></div>
     </div>
 
-
+    <!--
     <div class="submit-field-options"
          style="display: none">
         <div class="options">
@@ -630,48 +431,25 @@
             <div onclick="changeSubmitFieldType(3); return false;">Request Action</div>
         </div>
     </div>
+    -->
 
-    <div class="scrollable-container"
-         style="position: relative;">
-
-         <div class="fields-container"
-              style="position: absolute; display: flex; flex-direction: column;
-                      left: 10px; right: 10px; top: 0; bottom: 0; 
-                      overflow-y: hidden;">
-
+    <div class="scrollable-container form-section">
+         <div class="fields-container">
             <div class="form-fields">
             </div>
-
-            <div style="width: 100%; height: 3px; margin-bottom: 5px;
-                        background-color:antiquewhite;"></div>
-
+            <div class="forms-separator"></div>
             <div class="parent-form-fields">
             </div>
-                    
-        </div>
-
-    </div>
-
-
-
-    <div class="footer"
-         style="display: none; height: 50vh">
-        <div class="forms"
-             style="display: none">
-        </div>
-        <div class="options"
-             style="display: none">
         </div>
     </div>
 
 </div>
 
-<div class="action-container page-container"
-     style="display: none">
+<div class="action-container page-container">
     <div class="header">
         <div></div>
         <div style="cursor: pointer"
-             onclick="newActionGroup(); return false;">
+             onclick="createUserActions(); return false;">
             <span>Tasks</span>
             <img src="images/add.png"
                  class="button-icon">
@@ -679,30 +457,6 @@
         <div></div>
     </div>
     <div class="scrollable-container">
-    </div>
-    <div class="footer"
-         style="display: none; height: 50vh">
-    </div>
-</div>
-
-<div class="setting-container page-container"
-     style="display: none">
-    <div class="header">
-        <div></div>
-        <div style="cursor: pointer"
-             onclick="newActionGroup(); return false;">
-            <span>Settings</span>
-            <!--
-            <img src="images/add.png"
-                 class="button-icon">
-            -->
-        </div>
-        <div></div>
-    </div>
-    <div class="scrollable-container">
-    </div>
-    <div class="footer"
-         style="display: none; height: 50vh">
     </div>
 </div>
 
@@ -712,10 +466,10 @@
 
     $(document).ready(function () {
 
-//        authorizeUser();
-//        validateSubmitFieldAction();
+        authorizeUser();
+        validateSubmitFieldAction();
 
-        getActionFormWithLink();
+//        getActionFormWithLink();
 
         $(window).on("resize", function() {
             adjustTextAreaRows($('.field-to-submit'));
@@ -739,7 +493,7 @@
             success: function (result) {
                 if (result.status == 'success') 
                 {
-                    openActionForms(result.model.formsID);
+                    getUserActions();
                 }
                 else {
                     alert("User not authorized !");
@@ -751,50 +505,13 @@
         });
     }
 
-    function getActionForm() {
-        $('.form-container').find('.scrollable-container').find('.form-fields').html('');
-        var model = {
-            formsID: $('.form-container').attr('data-formsID'),
-            formID: $('.form-container').attr('data-formID'),
-        };
-
-        if (formID != "") {
-            $.ajax({
-                url: baseURL + 'GetActionForm',
-                type: "post",
-                contentType: 'application/json',
-                data: JSON.stringify(model),
-                success: function (result) {
-                    if (result.status == "success") {
-                        result.model.fields.forEach(function (item) {
-                            if (item.type == 2) {
-                                addFormRawField(item.fieldID, item.type, item.value);
-                            }
-                            else if (item.type == 3) {
-                                addFormRequestActionField(item.fieldID, item.type, item.value);
-                            }
-                        });
-                        validateSubmitFieldAction();
-                        showPage('form-container');
-                    }
-                },
-                error: function (result) {
-                    alert('Server communication error!');
-                },
-            });
-        }
-    }
-
     function newForm() {
         $('.form-container').attr('data-formID', '');
         getNewActionForm();
     }
 
     function openActionForms(formsID) {
-        var container = $('.form-container');
-        container.attr('data-formsID', formsID);
-        newForm();
-//        getActionForms('');
+        getActionForms(formsID);
     }
 
     function getUserActions() {
@@ -807,14 +524,8 @@
                 if (result.status == 'success') {
                     result.model.fields.forEach(function (item) {
                         var container = $('.action-container').find('.scrollable-container');
-                        var itemContainer = $('<div>', {
-                            class: 'item',
-                            text: item.title,
-                            'data-formsID': item.formsID
-                        }).appendTo(container);
-                        itemContainer.click(function() {
-                            openActionForms($(this).attr('data-formsID'));
-                        });
+                        createUserActionContainer(item.title, item.formsID).appendTo(container);
+                        /*
                         var badgeCount = item.totalPendingForms;
                         if (badgeCount > 0) {
                             var badge = $('<div>', {
@@ -822,6 +533,7 @@
                                 text: badgeCount > 99 ? "99+" : badgeCount.toString()
                             }).appendTo(itemContainer);
                         }
+                            */
                     });
                     showPage('action-container');
                 }
@@ -831,112 +543,6 @@
             },
         });
     }
-
-    function showFormsFooter()  {
-        $('.form-container').find('.footer').find('.forms').show();
-        $('.form-container').find('.footer').find('.options').hide();
-    }
-
-    function showOptionsFooter()  {
-        $('.form-container').find('.footer').find('.forms').hide();
-        $('.form-container').find('.footer').find('.options').show();
-    }
-
-    function getActionForms(visibleFormID) {
-        $('.form-container').find('.footer').find('.forms').html('');
-        var model = {
-            formsID: $('.form-container').attr('data-formsID'),
-            searchKey: ''
-        };
-        $.ajax({
-            url: baseURL + 'GetActionForms',
-            type: "post",
-            contentType: 'application/json',
-            data: JSON.stringify(model),
-            success: function (result) {
-                if (result.status == "success") {
-                    result.model.fields.forEach(function (item) {
-                        var container = $('.form-container').find('.footer').find('.forms');
-                        var backgroundColor = "white";
-                        if (item.status == "0") {
-                            backgroundColor = "#E0FFFF";
-                        }
-                        var card = $('<div>', {
-                            class: 'card',
-                            text: item.content, 
-                            css: {
-                                'background-color': backgroundColor
-                            },   
-                            'data-formID': item.formID
-                        });
-                        card.appendTo(container);
-                        card.click(function() {
-                            $('.form-container').attr('data-formID', $(this).attr('data-formID'));
-                            getActionForm();
-                        });
-                        showFormsFooter();
-
-                        if (visibleFormID != '') {
-                            var card = $('.card[data-formID="' + visibleFormID + '"]');
-                            if (card.length) {
-                                container.scrollTop(
-                                    card.offset().top - container.offset().top + container.scrollTop()
-                                );
-                            }
-                        }
-                    });
-                }
-            },
-            error: function (result) {
-                alert('Server communication error!');
-            },
-        });
-    }
-/*
-    function saveActionForm() {
-        var model = {
-            formsID: $('.form-container').attr('data-formsID'),
-            formID: $('.form-container').attr('data-formID'),
-            fields: []
-        };
-        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
-        container.children('.form-field').each(function(){
-            var type = parseInt($(this).attr('data-type'));
-            var value = '';
-            if (type == 1) {
-                value = $(this).find('input').val();
-            }
-            else if (type == 2) {
-                value = $(this).find('textarea').val();
-            }
-            var field = {
-                fieldID: $(this).attr('data-fieldID'),
-                type: type,
-                value: value
-            };
-            model.fields.push(field);
-        });
-        $.ajax({
-            url: baseURL + 'SaveActionForm',
-            type: "post",
-            contentType: 'application/json',
-            data: JSON.stringify(model),
-            success: function (result) {
-                if (result.status == 'success') {
-                    var formID = result.model.formID;
-                    newForm();
-                    getActionForms(formID);
-                }
-                else {
-                    alert('Data submission error (2)!')
-                }
-            },
-            error: function (result) {
-                alert('Data submission error (1)!')
-            },
-        });
-    }
-*/
 
     function validateSubmitFieldAction() {
         var canSave = false;
@@ -949,523 +555,12 @@
         else {
             $('.submit-field-button').hide();
         }
-    }
-
-    function validateSaveAction() {
-        var canSave = false;
-        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
-        container.children('.form-field').each(function(){
-            var type = parseInt($(this).attr('data-type'));
-            if (type == 1) {
-                if ($(this).find('input').val().trim() != '') {
-                    canSave = true;
-                    return false;
-                }
-            }
-            else if (type == 2) {
-                if ($(this).find('textarea').val().trim() != '') {
-                    canSave = true;
-                    return false;
-                }
-            }
-        });
-        if (canSave) {
-            $('.save-action').show();
-        }
-        else {
-            $('.save-action').hide();
-        }
-    }
-
-    function copyFormFieldValue(fieldID, value) {
-        var formFields = $('.form-container').find('.scrollable-container').find('.form-fields');
-        formFields.children('.form-field').each(function(){
-            if ($(this).attr('data-fieldID') == fieldID) {
-                var type = parseInt($(this).attr('data-type'));
-                if (type == 1) {
-                    $(this).find('input').val(value);
-                }
-                else if (type == 2) {
-                    value = $(this).find('textarea').val(value);
-                }
-                validateSaveAction();
-                return false;
-            }
-        });
-    }
-
-    function showFieldOptions(elem) {
-        $('.form-container').find('.footer').find('.options').html('');
-        var field = $(elem).closest('.form-field');
-        var fieldID = field.attr('data-fieldID');
-        var model = {
-            formsID: $('.form-container').attr('data-formsID'),
-            fieldID: fieldID
-        };
-        $.ajax({
-            url: baseURL + 'GetActionFormFields',
-            type: "post",
-            contentType: 'application/json',
-            data: JSON.stringify(model),
-            success: function (result) {
-                if (result.status == "success") {
-                    result.model.fields.forEach(function (item) {
-                        var container = $('.form-container').find('.footer').find('.options');
-                        var backgroundColor = "white";
-                        var card = $('<div>', {
-                            class: 'card',
-                            'data-fieldID': item.fieldID,
-                            'data-value': item.value
-                        });
-                        card.appendTo(container);
-                        card.click(function() {
-                            copyFormFieldValue($(this).attr('data-fieldID'), $(this).attr('data-value'));
-                            showFormsFooter();
-                        });
-
-                        $('<div>', {
-                            class: 'text',
-                            text: item.value
-                        }).appendTo(card);
-                        $('<img>', {
-                            src: 'images/select.png',
-                            class: 'image',
-                        }).appendTo(card);
-                    });
-                    showOptionsFooter();
-                }
-            },
-            error: function (result) {
-                alert('Server communication error!');
-            },
-        });
-    }
-
-    /*
-    function addFormField(fieldID, type, value) {
-        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
-        var fieldContainer = $('<div>', {
-            class: 'form-field',
-            'data-fieldID': fieldID,
-            'data-type': type
-        }).appendTo(container);
-
-        if (type == 1) {
-            getTextField(value).appendTo(fieldContainer);
-        }
-        else if (type == 2) {
-            getTextAreaField(value).appendTo(fieldContainer);
-        }
-        
-        var imgDiv = $('<img>', {
-            src: 'images/search.png',
-            class: 'button-icon',
-        }).appendTo(fieldContainer);
-        imgDiv.click(function() {
-            showFieldOptions(this);
-        });
-    }
-        */
-
-//**************************************************
-
-    /*
-    function submitForm() {
-        var model = {
-            formsID: 29,
-            formID: '',
-            fields: []
-        };
-        var fieldID = 1;
-        var formTitle = "";
-        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
-        container.children('.form-field').each(function(){
-            var field = {
-                fieldID: fieldID,
-                type: 1,
-                value: ''
-            };
-            var type = parseInt($(this).attr('data-type'));
-            if (type == 1) {
-                field.value = $(this).find('input').val();
-                if (formTitle == '') {
-                    formTitle = field.value;
-                }
-            }
-            model.fields.push(field);
-            fieldID++;
-        });
-        $.ajax({
-            url: baseURL + 'SaveActionForm',
-            type: "post",
-            contentType: 'application/json',
-            data: JSON.stringify(model),
-            success: function (result) {
-                if (result.status == 'success') {
-                    refreshForm(formTitle);
-                }
-                else {
-                    alert('未能存入 !')
-                }
-            },
-            error: function (result) {
-                alert('未能送出 !')
-            },
-        });
-    }
-    */
-
-    function getTextField(value) {
-        return $('<input>', {
-            type: 'text',
-            placeholder: 'Text',
-            value: value
-        });
-    }
-
-    function getTextAreaField(value) {
-        return $('<textarea>', {
-            placeholder: "Multiple Lines Text",
-            text: value
-        });
-    }
-
-    function getFormsField() {
-        var layers = $('<div>', {
-            class: 'layers',
-        });
-        $('<div>', {
-            class: 'layer',
-        }).appendTo(layers);
-        $('<div>', {
-            class: 'layer',
-        }).appendTo(layers);
-        $('<div>', {
-            class: 'layer',
-        }).appendTo(layers);
-        return layers;
-    }
-
-    function changeFormFieldType(elem) {
-        var type = parseInt($(elem).attr('data-type'));
-        var options = $(elem).closest('.form-options');
-        var formField = options.prev();
-        formField.attr('data-type', type);
-        if (type == 1) {
-            formField.children().first().replaceWith(getTextField());
-        }
-        else if (type == 2) {
-            formField.children().first().replaceWith(getFormsField());
-        }
-        options.hide();
-    }
-
-    function submitForm() {
-        var model = {
-            formsID: 29,
-            formID: '',
-            fields: []
-        };
-        var fieldID = 1;
-        var formTitle = "";
-        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
-        container.children('.form-field').each(function(){
-            var field = {
-                fieldID: fieldID,
-                type: 1,
-                value: ''
-            };
-            var type = parseInt($(this).attr('data-type'));
-            if (type == 1) {
-                field.value = $(this).find('input').val();
-                if (formTitle == '') {
-                    formTitle = field.value;
-                }
-            }
-            model.fields.push(field);
-            fieldID++;
-        });
-        $.ajax({
-            url: baseURL + 'SaveActionForm',
-            type: "post",
-            contentType: 'application/json',
-            data: JSON.stringify(model),
-            success: function (result) {
-                if (result.status == 'success') {
-                    refreshForm(formTitle);
-                }
-                else {
-                    alert('未能存入 !')
-                }
-            },
-            error: function (result) {
-                alert('未能送出 !')
-            },
-        });
-    }
-
-    function refreshForm(fieldValue) {
-        $('<div>', {
-            class: 'card',
-            text: fieldValue,
-        }).prependTo($('.form-container').find('.footer').find('.forms'));
-        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
-        container.find('input').val('');
-        container.find('textarea').val('');
-        $('.form-container').find('.footer').find('.forms').show();
-    }
-
-    function showFullForm() {
-        $('.form-container').find('.footer').find('.forms').hide();
-    }
-
-    /*
-    function getActionForms() {
-        $('.form-container').find('.footer').html('');
-        var model = {
-            formsID: 29,
-            searchKey: ''
-        };
-        $.ajax({
-            url: baseURL + 'GetActionForms',
-            type: "post",
-            contentType: 'application/json',
-            data: JSON.stringify(model),
-            success: function (result) {
-                if (result.status == "success") {
-                    var fields = [];
-                    result.model.fields.forEach(function (item) {
-                        var field = {
-                            formID: item.formID,
-                            formTitle: item.formTitle
-                        };
-                        fields.push(field);
-                    });
-                    for (var i = 0; i < fields.length; i++) {
-                        $('<div>', {
-                            class: 'card',
-                            text: fields[i].formTitle,
-                            'data-id': fields[i].formID
-                        }).appendTo($('.form-container').find('.footer'));
-                    }
-                    $('.form-container').find('.footer').show();
-                }
-            },
-            error: function (result) {
-
-                alert('error');
-
-            },
-        });
-    }
-
-    function getActionForm() {
-        var model = {
-            formsID: 29,
-            formID: 'cb154a9e-4e7f-4c54-9211-bea30fa6442b'
-        };
-
-        $.ajax({
-            url: baseURL + 'GetActionForm',
-            type: "post",
-            contentType: 'application/json',
-            data: JSON.stringify(model),
-            success: function (result) {
-                if (result.status == "success") {
-                    var fields = [];
-
-        //                    alert(result.model.fields.length);
-
-                    result.model.fields.forEach(function (item) {
-                        var field = {
-                            fieldID: item.fieldID,
-                            type: item.type,
-                            value: item.value
-                        };
-                        fields.push(field);
-
-                                alert(field.fieldID + ' - ' + field.type + ' - ' + field.value);
-
-                    });
-                }
-            },
-            error: function (result) {
-
-                alert('error');
-
-            },
-        });
-    }
-        */
-
-    function addActionItem(title, number) {
-        var container = $('.action-container').find('.scrollable-container');
-        var itemContainer = $('<div>', {
-            class: 'item',
-            text: title
-        }).appendTo(container);
-        itemContainer.click(function() {
-            showActionItems();
-        });
-
-        var badge = $('<div>', {
-            class: 'badge',
-            text: number > 99 ? "99+" : number.toString()
-        }).appendTo(itemContainer);
-        badge.click(function(event) {
-            showPendingActionItems(event);
-        });
-    }
-
-    function showActionItems() {
-        $('.action-container').find('.footer').find('.forms').show();
-    }
-
-    function showPendingActionItems(event) {
-        event.stopPropagation();
-        $('.action-container').find('.footer').find('.forms').show();
-    }
-
-    function openOptionsSection(elem) {
-        var container = $(elem).closest('.form-field').next();
-        if (container.is(':visible')) {
-            container.hide();
-        } 
-        else {
-            container.show();
-        }
-    }
-
-    //*******************************************************
-
-    function newActionGroup() {
-        $.ajax({
-            url: baseURL + 'AddActionGroup',
-            type: "post",
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.status == 'success') {
-                    $('.action-container').find('.scrollable-container').html('');
-                    result.model.fields.forEach(function (item) {
-                        var container = $('.action-container').find('.scrollable-container');
-                        var itemContainer = $('<div>', {
-                            class: 'item',
-                            text: item.title,
-                            'data-formsID': item.formsID
-                        }).appendTo(container);
-                        itemContainer.click(function() {
-                            openActionForms($(this).attr('data-formsID'));
-                        });
-                        var badgeCount = item.totalPendingForms;
-                        if (badgeCount > 0) {
-                            var badge = $('<div>', {
-                                class: 'badge',
-                                text: badgeCount > 99 ? "99+" : badgeCount.toString()
-                            }).appendTo(itemContainer);
-                        }
-                    });
-                    $('.form-container').hide();
-                    $('.action-container').show();
-                }
-            },
-            error: function (result) {
-                alert('Server communication error!');
-            },
-        });
-    }
-
-    function openSettingPage() {
-        showPage('setting-container');
+        $('.spinner').hide();
     }
 
     function showPage(pageName) {
         $('.page-container').hide();
         $('.' + pageName).show();
-    }
-
-    function addFormRawField(fieldID, type, value) {
-        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
-        var fieldContainer = $('<div>', {
-            class: 'raw-field',
-            text: value,
-            'data-fieldID': fieldID,
-            'data-type': type
-        }).appendTo(container);
-        return fieldContainer;
-    }
-
-    function addFormRequestActionField(fieldID, type, value) {
-        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
-        var fieldContainer = $('<div>', {
-            class: 'request-action',
-            'data-fieldID': fieldID,
-            'data-type': type
-        }).appendTo(container);
-        $('<div style="flex: 1"></div>').appendTo(fieldContainer);
-        $('<div class="user" style="margin-left: 10px; margin-right: 10px;"></div>').appendTo(fieldContainer);
-        var button = $('<button>', {
-            class: 'button',
-            text: 'Request - ' + value
-        }).appendTo(fieldContainer);
-        button.click(function() {
-            var email = prompt("Please enter user email", "");
-            if (email != null) {
-                $(this).closest('.request-action').find('.user').text(email);
-            }
-        });
-        return fieldContainer;
-    }
-
-    function submitRawField() {
-        var value = $('.field-to-submit').val();
-        if (value.trim() != '') {
-            var fieldContainer = null;
-            var type = parseInt($('.submit-field-type').attr('data-type'));
-            if (type == 2) {
-                fieldContainer = addFormRawField('', type, '');
-            }
-            else if (type == 3) {
-                fieldContainer = addFormRequestActionField('', type, '');
-            }
-            $('.field-to-submit').val('');
-            adjustTextAreaRows($('.field-to-submit'));
-            validateSubmitFieldAction();
-
-            $('.submit-field-type').text('Text');
-            $('.submit-field-type').attr('data-type', '2');
-
-            if (fieldContainer != null) {
-                var model = {
-                    formsID: $('.form-container').attr('data-formsID'),
-                    formID: $('.form-container').attr('data-formID'),
-                    field: {
-                        fieldID: '',
-                        type: type,
-                        value: value
-                    }
-                };
-                $.ajax({
-                    url: baseURL + 'SaveActionFormField',
-                    type: "post",
-                    contentType: 'application/json',
-                    data: JSON.stringify(model),
-                    success: function (result) {
-                        if (result.status == "success") {
-                            $('.form-container').attr('data-formID', result.model.formID);
-                            if (fieldContainer.attr('data-type') == result.model.field.type) {
-                                fieldContainer.attr('data-fieldID', result.model.field.fieldID);
-                                fieldContainer.text(result.model.field.value);
-                            }
-                        }
-                    },
-                    error: function (result) {
-
-                        alert('error');
-
-                    },
-                });
-            }
-        }
     }
 
     function adjustTextAreaRows(field) {
@@ -1479,31 +574,268 @@
         textArea.style.height = height + 'px';
     }
 
-    function showSubmitFieldOptions() {
-        $('.submit-field-options').show();
-    }
-
-    function changeSubmitFieldType(type) {
-        if (type == 2) {
-            $('.submit-field-type').text('Text');
-        } else {
-            $('.submit-field-type').text('Request Action');
+    function changeSubmitFieldType(elem) {
+        var fieldSection = $(elem).closest('.submit-field-section');
+        if (fieldSection.attr('data-fieldID') == '') {
+            var type = parseInt(fieldSection.attr('data-type'));
+            if (type == 2) {
+                type = 3;
+            } else {
+                type = 2;
+            }
+            fieldSection.attr('data-type', type);
+            if (type == 2) {
+                fieldSection.find('.submit-field-type').text('Fill');
+            } else {
+                fieldSection.find('.submit-field-type').text('Link');
+            }
+            fieldSection.find('.field-to-submit').val('');
+            validateSubmitFieldAction();
         }
-        $('.submit-field-type').attr('data-type', type);
-        $('.submit-field-options').hide();
     }
 
-    function browseForms() {
-        var container = $('.form-container').find('.scrollable-container');
-        container.find('.form-fields').hide();
-        container.find('.forms-section').show();
-        getActionForms1('');
+    function createUserActionContainer(title, formsID) {
+        var itemContainer = $('<div>', {
+            class: 'item',
+            text: title,
+            'data-formsID': formsID
+        });
+        itemContainer.click(function() {
+            openActionForms($(this).attr('data-formsID'));
+        });
+        return itemContainer;
     }
 
-    function getActionForms1(visibleFormID) {
+    function createUserActions() {
+        var taskName = prompt("New task name");
+        if (taskName) {
+            taskName = taskName.trim();
+            if (taskName != '') {
+                var model = {
+                    formsID: '',
+                    name: taskName
+                };
+                $.ajax({
+                    url: baseURL + 'CreateUserActions',
+                    type: "post",
+                    contentType: 'application/json',
+                    data: JSON.stringify(model),
+                    success: function (result) {
+                        if (result.status == "success") {
+                            var container = $('.action-container').find('.scrollable-container');
+                            createUserActionContainer(taskName, result.model.formsID).prependTo(container);
+                        }
+                    },
+                    error: function (result) {
+                        alert('Server communication error!');
+                    },
+                });
+            }
+        }
+    }
+
+    function addFormField(container, fieldID, type, value) {
+        var fieldClass = '';
+        if (type == 2) {
+            fieldClass = 'raw-field';
+        }
+        else if (type == 3) {
+            fieldClass = 'raw-field link-field';
+        }
+        if (fieldClass != '') {
+            var fieldContainer = $('<div>', {
+                class: 'raw-field-container',
+                'data-fieldID': fieldID,
+                'data-type': type,
+                'data-value': value
+            }).appendTo(container);
+            fieldContainer.click(function() {
+                setSubmitField(this);
+            });
+            $('<div>', {
+                class: fieldClass,
+                text: value
+            }).appendTo(fieldContainer);
+            $('<div>', {
+                class: 'dummy-field'
+            }).appendTo(fieldContainer);
+        }
+    }
+
+    function changeFormField(container, fieldID, type, value) {
+        var field = container.find('.raw-field-container[data-fieldID="' + fieldID + '"]');
+        if (field.length > 0) {
+            field.attr('data-type', type);
+            field.attr('data-value', value);
+            field.find('.raw-field').text(value);
+        }
+        else {
+            addFormField(container, fieldID, type, value);
+        }
+    }
+
+    function addParentFormField(container, fieldID, type, value ) {
+        var fieldClass = '';
+        if (type == 2) {
+            fieldClass = 'raw-field';
+        }
+        else if (type == 3) {
+            fieldClass = 'raw-field link-field';
+        }
+        if (fieldClass != '') {
+            var fieldContainer = $('<div>', {
+                class: 'raw-field-container',
+                'data-fieldID': fieldID,
+                'data-type': type
+            }).appendTo(container);
+            $('<div>', {
+                class: 'dummy-field'
+            }).appendTo(fieldContainer);
+            $('<div>', {
+                class: fieldClass,
+                text: value
+            }).appendTo(fieldContainer);
+        }
+    }
+
+    function getActionForm(formID) {
         var model = {
             formsID: $('.form-container').attr('data-formsID'),
-            searchKey: ''
+            formID: formID
+        };
+        $.ajax({
+            url: baseURL + 'GetActionForm',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == "success") {
+                    var formsContainer = $('.form-container').find('.scrollable-container').find('.form-fields');
+                    var parentFormsContainer = $('.form-container').find('.scrollable-container').find('.parent-form-fields');
+                    formsContainer.html('');
+                    parentFormsContainer.html('');
+                    $('.form-section').show();
+                    $('.submit-field').hide();
+                    result.model.fields.forEach(function (item) {
+                        addFormField(formsContainer, item.fieldID, item.type, item.value);
+                    });
+                    if (result.model.parentFormID == "") {
+                        $('.forms-separator').hide();
+                        $('.parent-form-fields').hide();
+                    }
+                    else {
+                        result.model.parentFormFields.forEach(function (item) {
+                            addParentFormField(parentFormsContainer, item.fieldID, item.type, item.value);
+                        });
+                        $('.forms-separator').show();
+                        $('.parent-form-fields').show();
+                    }
+                }
+            },
+            error: function (result) {
+                alert('Server communication error!');
+            },
+        });
+    }
+
+    function newSubmitField(elem) {
+        var fieldSection = $(elem).closest('.submit-field-section');
+        fieldSection.find('.raw-field').removeClass().addClass('raw-field');
+        fieldSection.find('.submit-field-type').text('Fill');
+        fieldSection.attr('data-fieldID', '');
+        fieldSection.attr('data-type', '2');
+        fieldSection.find('.field-to-submit').val('');
+        $('.submit-field').show();
+        validateSubmitFieldAction();
+    }
+
+    function setSubmitField(elem) {
+        var fieldContainer = $(elem);
+        var type = parseInt(fieldContainer.attr('data-type'));
+        var fieldSection = $('.submit-field-section');
+        fieldSection.attr('data-fieldID', fieldContainer.attr('data-fieldID'));
+        fieldSection.attr('data-type', type);
+        fieldSection.find('.field-to-submit').val(fieldContainer.attr('data-value'));
+
+        if (type == 2) {
+            fieldSection.find('.submit-field-type').text('Fill');
+        } else {
+            fieldSection.find('.submit-field-type').text('Link');
+        }
+
+        $('.submit-field').show();
+        validateSubmitFieldAction();
+    }
+
+    function submitFormField() {
+        var value = $('.field-to-submit').val();
+        if (value.trim() != '') {
+            $('.submit-field-button').hide();
+            $('.spinner').show();
+
+            var field = {
+                fieldID: $('.submit-field-section').attr('data-fieldID'),
+                type: parseInt($('.submit-field-section').attr('data-type')),
+                value: value
+            };
+            var fields = [];
+            var formsContainer = $('.form-container').find('.scrollable-container').find('.form-fields');
+            formsContainer.find('.raw-field').each(function(index, element) {
+                var container = $(this).closest('.raw-field-container');
+                var fieldID = container.attr('data-fieldID');
+                var type = parseInt(container.attr('data-type'));
+                var value = container.attr('data-value');
+                if (fieldID == field.fieldID) {
+                    type = field.type,
+                    value = field.value
+                }
+                fields.push({
+                    fieldID: fieldID,
+                    type: type,
+                    value: value
+                });
+            });
+            if (field.fieldID == '') {
+                fields.push(field);
+            }
+
+            var model = {
+                formsID: $('.form-container').attr('data-formsID'),
+                formID: $('.form-container').attr('data-formID'),
+                fields: fields
+            };
+            $.ajax({
+                url: baseURL + 'SaveActionFormFields',
+                type: "post",
+                contentType: 'application/json',
+                data: JSON.stringify(model),
+                success: function (result) {
+                    if (result.status == 'success') {
+                        var formsContainer = $('.form-container').find('.scrollable-container').find('.form-fields');
+                        result.model.fields.forEach(function (item) {
+                            changeFormField(formsContainer, item.fieldID, item.type, item.value);
+                        });
+                        $('.form-container').attr('data-formID', result.model.formID);
+                        $('.field-to-submit').val('');
+                        $('.submit-field').hide();
+                        validateSubmitFieldAction();
+                    }
+                    else {
+                        alert('未能存入 !')
+                    }
+                    $('.spinner').hide();
+                },
+                error: function (result) {
+                    $('.spinner').hide();
+                    alert('未能送出 !')
+                },
+            });
+        }
+    }
+
+    function getActionForms(formsID) {
+        var model = {
+            formsID: formsID
         };
         $.ajax({
             url: baseURL + 'GetActionForms',
@@ -1512,191 +844,29 @@
             data: JSON.stringify(model),
             success: function (result) {
                 if (result.status == "success") {
-                    var container = $('.form-container').find('.scrollable-container').find('.forms-section').find('.forms');
-                    container.html('');
-                    result.model.fields.forEach(function (item) {
-                        var backgroundColor = "white";
-                        if (item.status == "0") {
-                            backgroundColor = "#E0FFFF";
-                        }
-                        var card = $('<div>', {
-                            class: 'card',
-                            text: item.content, 
-                            css: {
-                                'background-color': backgroundColor
-                            },   
-                            'data-formID': item.formID
-                        });
-                        card.appendTo(container);
-                        card.click(function() {
-                            $('.form-container').attr('data-formID', $(this).attr('data-formID'));
-                            getActionForm();
-                        });
-                    });
-
-                    if (visibleFormID != '') {
-                            var card = $('.card[data-formID="' + visibleFormID + '"]');
-                            if (card.length) {
-                                container.scrollTop(
-                                    card.offset().top - container.offset().top + container.scrollTop()
-                                );
-                            }
-                        }
-                }
-            },
-            error: function (result) {
-                alert('Server communication error!');
-            },
-        });
-    }
-
-    function getNewActionForm() {
-        $('.form-container').find('.scrollable-container').find('.form-fields').html('');
-        var model = {
-            formsID: $('.form-container').attr('data-formsID')
-        };
-        $.ajax({
-            url: baseURL + 'GetNewActionForm',
-            type: "post",
-            contentType: 'application/json',
-            data: JSON.stringify(model),
-            success: function (result) {
-                if (result.status == "success") {
-                    result.model.fields.forEach(function (item) {
-                        if (item.type == 2) {
-                            addFormRawField(item.fieldID, item.type, item.value);
-                        }
-                        else if (item.type == 3) {
-                            addFormRequestActionField(item.fieldID, item.type, item.value);
-                        }
-                    });
-                    validateSubmitFieldAction();
-                    showPage('form-container');
-                }
-            },
-            error: function (result) {
-                alert('Server communication error!');
-            },
-        });
-    }
-
-    function saveActionForm() {
-        var model = {
-            formsID: $('.form-container').attr('data-formsID'),
-            formID: $('.form-container').attr('data-formID'),
-            fields: []
-        };
-        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
-        container.children('div').each(function(){
-            var type = 0;
-            var fieldID = '';
-            var value = '';
-            if ($(this).hasClass('raw-field')) {
-                fieldID = $(this).attr('data-fieldID');
-                type = parseInt($(this).attr('data-type'));
-                value = $(this).text();
-            }
-            if (type > 0) {
-                var field = {
-                    fieldID: fieldID,
-                    type: type,
-                    value: value
-                };
-                model.fields.push(field);
-            }
-        });
-
-        for (var i = 0; i < model.fields.length; i++) {
-
-            alert(modeil.fields[i].fieldID + ' - ' + model.fields[i].type + ' - ' + model.fields[i].value);
-
-        }
-
-        /*
-        $.ajax({
-            url: baseURL + 'SaveActionForm',
-            type: "post",
-            contentType: 'application/json',
-            data: JSON.stringify(model),
-            success: function (result) {
-                if (result.status == 'success') {
-                    var formID = result.model.formID;
-                    newForm();
-                    getActionForms(formID);
-                }
-                else {
-                    alert('Data submission error (2)!')
-                }
-            },
-            error: function (result) {
-                alert('Data submission error (1)!')
-            },
-        });
-        */
-    }
-
-    function getActionFormWithLink() {
-        /*
-        var model = {
-            formsID: $('.form-container').attr('data-formsID'),
-            formID: $('.form-container').attr('data-formID'),
-        };
-        */
-
-        var model = {
-            formsID: '27196cec-392f-4aff-b580-c2766b0c996b*d437f8e0-2421-4fed-b1b9-59fb2404f48d',
-            formID: '154e5a91-fda2-4fa9-a5fe-2b6947de4cc7'
-        };
-
-        $.ajax({
-            url: baseURL + 'GetActionForm',
-            type: "post",
-            contentType: 'application/json',
-            data: JSON.stringify(model),
-            success: function (result) {
-                if (result.status == "success") {
-
                     var formsContainer = $('.form-container').find('.scrollable-container').find('.form-fields');
                     var parentFormsContainer = $('.form-container').find('.scrollable-container').find('.parent-form-fields');
                     formsContainer.html('');
                     parentFormsContainer.html('');
-
-                    result.model.fields.forEach(function (item) {
-                        if (item.type == 2) {
-                            var fieldContainer = $('<div>', {
-                                class: 'raw-field-container',
-                                'data-fieldID': item.fieldID,
-                                'data-type': item.type
-                            }).appendTo(formsContainer);
-                            $('<div>', {
-                                class: 'raw-field',
-                                text: item.value,
-                                'data-formsID': item.formsID
-                            }).appendTo(fieldContainer);
-                            $('<div>', {
-                                class: 'dummy-field'
-                            }).appendTo(fieldContainer);
-                        }
-                    });
-
-                    result.model.parentFormFields.forEach(function (item) {
-                        if (item.type == 2) {
-                            var fieldContainer = $('<div>', {
-                                class: 'raw-field-container',
-                                'data-fieldID': item.fieldID,
-                                'data-type': item.type
-                            }).appendTo(parentFormsContainer);
-                            $('<div>', {
-                                class: 'dummy-field'
-                            }).appendTo(fieldContainer);
-                            $('<div>', {
-                                class: 'raw-field',
-                                text: item.value,
-                                'data-formsID': item.formsID
-                            }).appendTo(fieldContainer);
-                        }
-                    });
-
+                    var container = $('.form-container');
+                    container.attr('data-formsID', formsID);
+                    $('.form-container').attr('data-formID', '');
+                    $('.field-to-submit').val('');
+                    $('.form-section').show();
+                    $('.submit-field-section').hide();
+                    validateSubmitFieldAction();
+                    showPage('form-container');
+                    if (result.model.parentFormID == "") {
+                        $('.forms-separator').hide();
+                        $('.parent-form-fields').hide();
+                    }
+                    else {
+                        result.model.parentFormFields.forEach(function (item) {
+                            addParentFormField(parentFormsContainer, item.fieldID, item.type, item.value);
+                        });
+                        $('.forms-separator').show();
+                        $('.parent-form-fields').show();
+                    }
                 }
             },
             error: function (result) {
@@ -1704,5 +874,39 @@
             },
         });
     }
+
+    /*
+    function createUserActions() {
+        var taskName = prompt("New task name");
+        if (taskName) {
+            taskName = taskName.trim();
+            if (taskName != '') {
+                var baseURL = "http://183.178.96.30/YuHingTesting1/api/Mobile/ActionFormsAPI/";
+
+                var model = {
+                    formsID: '84ada8dd-2a28-4a88-97ca-339ca4fd8ef5',
+                    name: taskName
+                };
+
+                $.ajax({
+                    url: baseURL1 + 'CreateUserActions',
+                    type: "post",
+                    contentType: 'application/json',
+                    data: JSON.stringify(model),
+                    success: function (result) {
+                        if (result.status == "success") {
+
+                            alert(result.model.formsID);
+
+                        }
+                    },
+                    error: function (result) {
+                        alert('Server communication error!');
+                    },
+                });
+            }
+        }
+    }
+        */
 
 </script>
