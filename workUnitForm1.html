@@ -390,6 +390,7 @@
 <div class="form-container page-container"
      style="display: none"
      data-formsID=""
+     data-parentFormID=""
      data-formID="">
     <div class="header">
         <div>
@@ -510,8 +511,8 @@
         getNewActionForm();
     }
 
-    function openActionForms(formsID) {
-        getActionForms(formsID);
+    function openActionForms(formsID, parentFormID) {
+        getActionForms(formsID, parentFormID);
     }
 
     function getUserActions() {
@@ -594,14 +595,15 @@
         }
     }
 
-    function createUserActionContainer(title, formsID) {
+    function createUserActionContainer(title, formsID, parentFormID) {
         var itemContainer = $('<div>', {
             class: 'item',
             text: title,
-            'data-formsID': formsID
+            'data-formsID': formsID,
+            'data-parentFormID': parentFormID
         });
         itemContainer.click(function() {
-            openActionForms($(this).attr('data-formsID'));
+            openActionForms($(this).attr('data-formsID'), $(this).attr('data-parentFormID'));
         });
         return itemContainer;
     }
@@ -623,7 +625,7 @@
                     success: function (result) {
                         if (result.status == "success") {
                             var container = $('.action-container').find('.scrollable-container');
-                            createUserActionContainer(taskName, result.model.formsID).prependTo(container);
+                            createUserActionContainer(taskName, result.model.formsID, '').prependTo(container);
                         }
                     },
                     error: function (result) {
@@ -634,74 +636,125 @@
         }
     }
 
-    function addFormField(container, fieldID, type, value) {
-        var fieldClass = '';
-        if (type == 2) {
-            fieldClass = 'raw-field';
-        }
-        else if (type == 3) {
-            fieldClass = 'raw-field link-field';
-        }
-        if (fieldClass != '') {
-            var fieldContainer = $('<div>', {
+    function hexToUnicodeString(hex) {
+        hex = hex.replace(/^0x/, '');
+        let unicodeStr = hex.match(/.{1,2}/g).map(byte => '%' + byte).join('');
+        return decodeURIComponent(unicodeStr);
+    }
+
+    function getRawFieldContainer(fieldID, type, value) {
+        var fieldContainer = $('<div>', {
+            class: 'raw-field-container',
+            'data-fieldID': fieldID,
+            'data-type': type,
+            'data-value': value
+        });
+        fieldContainer.click(function() {
+            setSubmitField(this);
+        });
+        $('<div>', {
+            class: 'raw-field',
+            text: value
+        }).appendTo(fieldContainer);
+        return fieldContainer;
+    }
+
+    function getLinkFieldContainer(fieldID, type, value) {
+        var fieldContainer = null;
+        var parts = value.split('|');
+        if (parts.length >= 3) {
+            var value = hexToUnicodeString(parts[0]);
+            var formsID = parts[1];
+            var parentFormID = parts[2];
+            fieldContainer = $('<div>', {
                 class: 'raw-field-container',
                 'data-fieldID': fieldID,
                 'data-type': type,
-                'data-value': value
-            }).appendTo(container);
+                'data-value': value,
+                'data-formsID': formsID,
+                'data-parentFormID': parentFormID
+            });
             fieldContainer.click(function() {
-                setSubmitField(this);
+                var linkFormsID = $(this).attr('data-formsID');
+                var formID = $('.form-container').attr('data-formID');
+                if (formID == "") {
+                    submitLinkField(linkFormsID, $(this).attr('data-fieldID'));
+                }
+                else {
+                    openActionForms(linkFormsID, formID);
+                }
             });
             $('<div>', {
-                class: fieldClass,
+                class: 'raw-field link-field',
                 text: value
             }).appendTo(fieldContainer);
-            $('<div>', {
-                class: 'dummy-field'
-            }).appendTo(fieldContainer);
+        }      
+        return fieldContainer;  
+    }
+
+    function addFormField(containerType, fieldID, type, value) {
+        var container = null;
+        if (containerType == 1) {
+            container = $('.form-container').find('.scrollable-container').find('.form-fields');
+        }
+        else if (containerType == 2) {
+            container = $('.form-container').find('.scrollable-container').find('.parent-form-fields');
+        }
+        if (container != null) {
+            var fieldContainer = null;
+            if (type == 2) {
+                fieldContainer = getRawFieldContainer(fieldID, type, value);
+                fieldContainer.appendTo(container);
+            }
+            else if (type == 3) {
+                fieldContainer = getLinkFieldContainer(fieldID, type, value);
+                if (fieldContainer != null) {
+                    fieldContainer.appendTo(container);
+                }
+            }
+            if (fieldContainer != null) {
+                if (containerType == 1) {
+                    $('<div>', {
+                        class: 'dummy-field'
+                    }).appendTo(fieldContainer);
+                }
+                else if (containerType == 2) {
+                    $('<div>', {
+                        class: 'dummy-field'
+                    }).prependTo(fieldContainer);
+                }
+            }
         }
     }
 
-    function changeFormField(container, fieldID, type, value) {
+    function changeFormField(fieldID, type, value) {
+        var container = $('.form-container').find('.scrollable-container').find('.form-fields');
         var field = container.find('.raw-field-container[data-fieldID="' + fieldID + '"]');
         if (field.length > 0) {
             field.attr('data-type', type);
+            if (type == 3) {
+                var parts = value.split('|');
+                if (parts.length >= 3) {
+                    value = hexToUnicodeString(parts[0]);
+                    var formsID = parts[1];
+                    var parentFormID = parts[2];
+                    field.attr('data-formsID', formsID);
+                    field.attr('data-parentFormID', parentFormID);
+                }
+            }
             field.attr('data-value', value);
             field.find('.raw-field').text(value);
         }
         else {
-            addFormField(container, fieldID, type, value);
-        }
-    }
-
-    function addParentFormField(container, fieldID, type, value ) {
-        var fieldClass = '';
-        if (type == 2) {
-            fieldClass = 'raw-field';
-        }
-        else if (type == 3) {
-            fieldClass = 'raw-field link-field';
-        }
-        if (fieldClass != '') {
-            var fieldContainer = $('<div>', {
-                class: 'raw-field-container',
-                'data-fieldID': fieldID,
-                'data-type': type
-            }).appendTo(container);
-            $('<div>', {
-                class: 'dummy-field'
-            }).appendTo(fieldContainer);
-            $('<div>', {
-                class: fieldClass,
-                text: value
-            }).appendTo(fieldContainer);
+            addFormField(1, fieldID, type, value);
         }
     }
 
     function getActionForm(formID) {
         var model = {
             formsID: $('.form-container').attr('data-formsID'),
-            formID: formID
+            formID: formID,
+            parentFormID: $('.form-container').attr('data-parentFormID'),
         };
         $.ajax({
             url: baseURL + 'GetActionForm',
@@ -710,14 +763,12 @@
             data: JSON.stringify(model),
             success: function (result) {
                 if (result.status == "success") {
-                    var formsContainer = $('.form-container').find('.scrollable-container').find('.form-fields');
-                    var parentFormsContainer = $('.form-container').find('.scrollable-container').find('.parent-form-fields');
-                    formsContainer.html('');
-                    parentFormsContainer.html('');
+                    $('.form-container').find('.scrollable-container').find('.form-fields').html('');
+                    $('.form-container').find('.scrollable-container').find('.parent-form-fields').html('');
                     $('.form-section').show();
                     $('.submit-field').hide();
                     result.model.fields.forEach(function (item) {
-                        addFormField(formsContainer, item.fieldID, item.type, item.value);
+                        addFormField(1, item.fieldID, item.type, item.value);
                     });
                     if (result.model.parentFormID == "") {
                         $('.forms-separator').hide();
@@ -725,7 +776,7 @@
                     }
                     else {
                         result.model.parentFormFields.forEach(function (item) {
-                            addParentFormField(parentFormsContainer, item.fieldID, item.type, item.value);
+                            addFormField(2, item.fieldID, item.type, item.value);
                         });
                         $('.forms-separator').show();
                         $('.parent-form-fields').show();
@@ -798,12 +849,13 @@
             if (field.fieldID == '') {
                 fields.push(field);
             }
-
             var model = {
                 formsID: $('.form-container').attr('data-formsID'),
                 formID: $('.form-container').attr('data-formID'),
+                parentFormID: $('.form-container').attr('data-parentFormID'),
                 fields: fields
             };
+
             $.ajax({
                 url: baseURL + 'SaveActionFormFields',
                 type: "post",
@@ -811,9 +863,8 @@
                 data: JSON.stringify(model),
                 success: function (result) {
                     if (result.status == 'success') {
-                        var formsContainer = $('.form-container').find('.scrollable-container').find('.form-fields');
                         result.model.fields.forEach(function (item) {
-                            changeFormField(formsContainer, item.fieldID, item.type, item.value);
+                            changeFormField(item.fieldID, item.type, item.value);
                         });
                         $('.form-container').attr('data-formID', result.model.formID);
                         $('.field-to-submit').val('');
@@ -833,9 +884,10 @@
         }
     }
 
-    function getActionForms(formsID) {
+    function getActionForms(formsID, parentFormID) {
         var model = {
-            formsID: formsID
+            formsID: formsID,
+            parentFormID: parentFormID
         };
         $.ajax({
             url: baseURL + 'GetActionForms',
@@ -844,25 +896,25 @@
             data: JSON.stringify(model),
             success: function (result) {
                 if (result.status == "success") {
-                    var formsContainer = $('.form-container').find('.scrollable-container').find('.form-fields');
-                    var parentFormsContainer = $('.form-container').find('.scrollable-container').find('.parent-form-fields');
-                    formsContainer.html('');
-                    parentFormsContainer.html('');
+                    $('.form-container').find('.scrollable-container').find('.form-fields').html('');
+                    $('.form-container').find('.scrollable-container').find('.parent-form-fields').html('');
                     var container = $('.form-container');
                     container.attr('data-formsID', formsID);
+                    container.attr('data-parentFormID', parentFormID);
                     $('.form-container').attr('data-formID', '');
                     $('.field-to-submit').val('');
                     $('.form-section').show();
                     $('.submit-field-section').hide();
                     validateSubmitFieldAction();
                     showPage('form-container');
-                    if (result.model.parentFormID == "") {
+
+                    if (result.model.parentFormID == null || result.model.parentFormID == "") {
                         $('.forms-separator').hide();
                         $('.parent-form-fields').hide();
                     }
                     else {
                         result.model.parentFormFields.forEach(function (item) {
-                            addParentFormField(parentFormsContainer, item.fieldID, item.type, item.value);
+                            addFormField(2, item.fieldID, item.type, item.value);
                         });
                         $('.forms-separator').show();
                         $('.parent-form-fields').show();
@@ -871,6 +923,45 @@
             },
             error: function (result) {
                 alert('Server communication error!');
+            },
+        });
+    }
+
+    function submitLinkField(linkFormsID, fieldID) {
+        var fields = [];
+        var formsContainer = $('.form-container').find('.scrollable-container').find('.form-fields');
+        formsContainer.find('.raw-field').each(function(index, element) {
+            var container = $(this).closest('.raw-field-container');
+            var fieldID = container.attr('data-fieldID');
+            var type = parseInt(container.attr('data-type'));
+            var value = container.attr('data-value');
+            fields.push({
+                fieldID: fieldID,
+                type: type,
+                value: value
+            });
+        });
+        var model = {
+            formsID: $('.form-container').attr('data-formsID'),
+            formID: '',
+            parentFormID: $('.form-container').attr('data-parentFormID'),
+            fields: fields
+        };
+        $.ajax({
+            url: baseURL + 'SaveActionFormFields',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == 'success') {
+                    openActionForms(linkFormsID, result.model.formID);
+                }
+                else {
+                    alert('未能存入 !')
+                }
+            },
+            error: function (result) {
+                alert('未能送出 !')
             },
         });
     }
