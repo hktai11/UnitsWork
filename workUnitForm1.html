@@ -24,13 +24,61 @@
     }
 
     .spinner {
-      display: inline-block;
-      width: 30px;
-      height: 30px;
-      border: 3px solid rgba(0, 0, 0, 0.1);
-      border-top: 3px solid #007bff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        border: 3px solid rgba(0, 0, 0, 0.1);
+        border-top: 3px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent gray */
+        z-index: 999; /* Ensure it overlays the page */
+        display: none; /* Hidden by default */
+    }
+
+    /* Modal dialog */
+    .modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90vw; /* 90% of the viewport width */
+        max-width: 90vw; /* Optional: Max width for larger screens */
+        height: 90vh; /* 90% of the viewport height */
+        max-height: 90vh; /* Optional: Max height for larger screens */
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        z-index: 1000; /* Above the overlay */
+        padding: 20px;
+        display: none; /* Hidden by default */
+        overflow-y: auto; /* Enable scrolling for tall content */
+    }
+
+    /* Close button inside the modal */
+    .modal .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: red;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    /* Disable background scrolling when modal is open */
+    body.no-scroll {
+        overflow: hidden; /* Prevent scrolling */
     }
 
     .form-container {
@@ -56,8 +104,8 @@
     }
 
     .add-field-button {
-        width: 30px; 
-        height: 30px; 
+        width: 40px; 
+        height: 40px; 
         cursor: pointer;        
     }
     .submit-field-section {
@@ -73,8 +121,8 @@
         cursor: pointer;
     }
     .submit-field-button {
-        width: 30px; 
-        height: 30px; 
+        width: 40px; 
+        height: 40px; 
         cursor: pointer;        
     }
     .field-to-submit {
@@ -151,7 +199,7 @@
     }
     .raw-field {
         width: max-content; 
-        min-width: 50px;
+        min-width: 100px;
         min-height: 30px;
         margin-bottom: 5px;
         padding-left: 10px; 
@@ -171,6 +219,25 @@
     }
     .link-field {
         background-color: cornflowerblue;
+    }
+
+    .field-options {
+        display: flex; 
+        flex-direction: column; 
+        overflow-y: auto;
+        width: 100%; 
+        height: 100%; 
+        border: 3px solid blue;
+    }
+    .field-option {
+        padding-left: 10px; 
+        padding-right: 10px; 
+        padding-top: 5px; 
+        padding-bottom: 5px; 
+        cursor: pointer;
+    }
+    .field-option:not(:last-child) {
+        border-bottom: 1px solid #ccc;
     }
 
     /*
@@ -387,6 +454,16 @@
 
 <script src="./js/jquery-3.4.1.min.js"></script>
 
+<div class="overlay" id="overlay"></div>
+
+<div class="modal" id="modal">
+    <button class="close-btn" id="closeModalBtn">X</button>
+    <div class="field-options"
+         style="display: flex; flex-direction: column; overflow-y: auto;
+                width: 100%; height: 100%; border: 3px solid blue">
+    </div>
+</div>
+
 <div class="form-container page-container"
      style="display: none"
      data-formsID=""
@@ -450,8 +527,11 @@
     <div class="header">
         <div></div>
         <div style="cursor: pointer"
-             onclick="createUserActions(); return false;">
-            <span>Tasks</span>
+             onclick="getActionFormFieldValues(); return false;">
+        <!--
+            onclick="createUserActions(); return false;">
+        -->
+        <span>Tasks</span>
             <img src="images/add.png"
                  class="button-icon">
         </div>
@@ -470,7 +550,7 @@
         authorizeUser();
         validateSubmitFieldAction();
 
-//        getActionFormWithLink();
+        setupOverlayBlock();
 
         $(window).on("resize", function() {
             adjustTextAreaRows($('.field-to-submit'));
@@ -485,6 +565,26 @@
             validateSaveAction();
         });
     });
+
+    function setupOverlayBlock() {
+        /*
+        overlay.style.display = 'none';
+        modal.style.display = 'none';
+        document.body.classList.remove('no-scroll');
+        */
+
+        closeModalBtn.addEventListener('click', () => {
+            overlay.style.display = 'none';
+            modal.style.display = 'none';
+            document.body.classList.remove('no-scroll');
+        });
+    }
+
+    function showOverlayBlock() {
+        overlay.style.display = 'block';
+        modal.style.display = 'block';
+        document.body.classList.add('no-scroll');
+    }
 
     function authorizeUser() {
         $.ajax({
@@ -603,7 +703,7 @@
             'data-parentFormID': parentFormID
         });
         itemContainer.click(function() {
-            openActionForms($(this).attr('data-formsID'), $(this).attr('data-parentFormID'));
+            openActionForms($(this).attr('data-formsID'), '');
         });
         return itemContainer;
     }
@@ -663,7 +763,6 @@
         var fieldContainer = null;
         var parts = value.split('|');
         if (parts.length >= 3) {
-            var value = hexToUnicodeString(parts[0]);
             var formsID = parts[1];
             var parentFormID = parts[2];
             fieldContainer = $('<div>', {
@@ -684,9 +783,10 @@
                     openActionForms(linkFormsID, formID);
                 }
             });
+            var formName = hexToUnicodeString(parts[0]);
             $('<div>', {
                 class: 'raw-field link-field',
-                text: value
+                text: formName
             }).appendTo(fieldContainer);
         }      
         return fieldContainer;  
@@ -763,14 +863,22 @@
             data: JSON.stringify(model),
             success: function (result) {
                 if (result.status == "success") {
+                    $('.form-container').attr('data-formID', formID);
                     $('.form-container').find('.scrollable-container').find('.form-fields').html('');
                     $('.form-container').find('.scrollable-container').find('.parent-form-fields').html('');
                     $('.form-section').show();
                     $('.submit-field').hide();
                     result.model.fields.forEach(function (item) {
-                        addFormField(1, item.fieldID, item.type, item.value);
+                        var value = item.value;
+                        if (formID == '') {
+                            if (item.type != 3) {
+                                value = '';
+                            }
+                        }
+                        addFormField(1, item.fieldID, item.type, value);
                     });
-                    if (result.model.parentFormID == "") {
+
+                    if (result.model.parentFormID == null || result.model.parentFormID == "") {
                         $('.forms-separator').hide();
                         $('.parent-form-fields').hide();
                     }
@@ -965,6 +1073,35 @@
             },
         });
     }
+
+    function getActionFormFieldValues() {
+        var model = {
+            fieldID: 'c8f7f591-61f3-41aa-9d7b-df77c49c11b8',
+        };
+        $.ajax({
+            url: baseURL + 'GetActionFormFieldValues',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == "success") {
+                    var container = $('.field-options');
+                    container.html('');
+                    showOverlayBlock();
+                    result.model.fields.forEach(function (item) {
+                        $('<div>', {
+                            class: 'field-option',
+                            text: item.value
+                        }).appendTo(container);
+                    });
+                }
+            },
+            error: function (result) {
+                alert('Server communication error!');
+            },
+        });
+    }
+
 
     /*
     function createUserActions() {
