@@ -141,6 +141,7 @@
     .field-to-submit {
         flex: 1; 
         width: 100%; 
+        min-height: 1.2em;
         padding: 5px; 
         border-radius: 5px; 
         resize: none        
@@ -371,6 +372,7 @@
      data-formID=""
      data-parentFormID=""
      data-formDone="0"
+     data-formsLink="0"
      data-formLink="0">
     <div class="header">
         <div>
@@ -405,7 +407,7 @@
     </div>
 
     <div class="links-section grayed-out"
-         onclick="setFormLink(); return false;">
+         onclick="setActionFormLink(); return false;">
         <div></div>
         <div>Links</div>
         <div></div>
@@ -681,35 +683,37 @@
         */
 
     function addFormField(containerType, fieldID, type, value) {
-        var container = null;
-        if (containerType == 1) {
-            container = $('.form-container').find('.scrollable-container').find('.form-fields');
-        }
-        else if (containerType == 2) {
-            container = $('.form-container').find('.scrollable-container').find('.parent-form-fields');
-        }
-        if (container != null) {
-            var fieldContainer = null;
-            if (type == 2) {
-                fieldContainer = getRawFieldContainer(fieldID, type, value);
-                fieldContainer.appendTo(container);
+        if (type == 2) {
+            var container = null;
+            if (containerType == 1) {
+                container = $('.form-container').find('.scrollable-container').find('.form-fields');
             }
-            else if (type == 3) {
-                fieldContainer = getLinkFieldContainer(fieldID, type, value);
-                if (fieldContainer != null) {
+            else if (containerType == 2) {
+                container = $('.form-container').find('.scrollable-container').find('.parent-form-fields');
+            }
+            if (container != null) {
+                var fieldContainer = null;
+                if (type == 2) {
+                    fieldContainer = getRawFieldContainer(fieldID, type, value);
                     fieldContainer.appendTo(container);
                 }
-            }
-            if (fieldContainer != null) {
-                if (containerType == 1) {
-                    $('<div>', {
-                        class: 'dummy-field'
-                    }).appendTo(fieldContainer);
+                else if (type == 3) {
+                    fieldContainer = getLinkFieldContainer(fieldID, type, value);
+                    if (fieldContainer != null) {
+                        fieldContainer.appendTo(container);
+                    }
                 }
-                else if (containerType == 2) {
-                    $('<div>', {
-                        class: 'dummy-field'
-                    }).prependTo(fieldContainer);
+                if (fieldContainer != null) {
+                    if (containerType == 1) {
+                        $('<div>', {
+                            class: 'dummy-field'
+                        }).appendTo(fieldContainer);
+                    }
+                    else if (containerType == 2) {
+                        $('<div>', {
+                            class: 'dummy-field'
+                        }).prependTo(fieldContainer);
+                    }
                 }
             }
         }
@@ -751,32 +755,41 @@
             data: JSON.stringify(model),
             success: function (result) {
                 if (result.status == "success") {
-                    $('.form-container').attr('data-formID', formID);
                     $('.form-container').find('.scrollable-container').find('.form-fields').html('');
                     $('.form-container').find('.scrollable-container').find('.parent-form-fields').html('');
-                    $('.form-section').show();
-                    $('.submit-field').hide();
+//                    $('.form-section').show();
+//                    $('.submit-field').hide();
+                    var formDone = '0';
                     result.model.fields.forEach(function (item) {
-                        var value = item.value;
-                        if (formID == '') {
-                            if (item.type != 3) {
-                                value = '';
+                        if (item.type == 3) {
+                            if (item.value == 'done') {
+                                formDone = '1';
                             }
+                        } else {
+                            addFormField(1, item.fieldID, item.type, item.value);
                         }
-                        addFormField(1, item.fieldID, item.type, value);
+                    });
+                    result.model.linkFormFields.forEach(function (item) {
+                        if (item.type != 3) {
+                            addFormField(2, item.fieldID, item.type, item.value);
+                        }
                     });
 
-                    if (result.model.parentFormID == null || result.model.parentFormID == "") {
-                        $('.forms-separator').hide();
-                        $('.parent-form-fields').hide();
+                    var formLink = '0';
+                    if (result.model.linkFormID != null) {
+                        if (result.model.linkFormID != '') {
+                            formLink = '1';
+                        }
                     }
-                    else {
-                        result.model.parentFormFields.forEach(function (item) {
-                            addFormField(2, item.fieldID, item.type, item.value);
-                        });
-                        $('.forms-separator').show();
-                        $('.parent-form-fields').show();
-                    }
+
+                    setFormPageAttributes(
+                        result.model.formsID, 
+                        result.model.formID,
+                        result.model.parentFormID == null ? '' : result.model.parentFormID,
+                        formDone,
+                        result.model.formLinks.length > 0 ? '1' : '0',
+                        formLink);
+                    showFormPage();
                 }
             },
             error: function (result) {
@@ -865,18 +878,30 @@
                         $('.field-to-submit').val('');
                         $('.submit-field').hide();
                         validateSubmitFieldAction();
+
+                        showFormPage();
                     }
                     else {
-                        alert('未能存入 !')
+                        alert('Submission failure !')
                     }
                     $('.spinner').hide();
                 },
                 error: function (result) {
                     $('.spinner').hide();
-                    alert('未能送出 !')
+                    alert('Server communication error!');
                 },
             });
         }
+    }
+
+    function setFormPageAttributes(formsID, formID, parentFormID, formDone, formsLink, formLink) {
+        var container = $('.form-container');
+        container.attr('data-formsID', formsID);
+        container.attr('data-formID', formID);
+        container.attr('data-parentFormID', parentFormID);
+        container.attr('data-formDone', formDone);
+        container.attr('data-formsLink', formsLink);
+        container.attr('data-formLink', formLink);
     }
 
     function getActionForms(formsID, formsTitle, parentFormID) {
@@ -894,31 +919,39 @@
                     $('.formsTitle').text(formsTitle);
                     $('.form-container').find('.scrollable-container').find('.form-fields').html('');
                     $('.form-container').find('.scrollable-container').find('.parent-form-fields').html('');
-                    var container = $('.form-container');
-                    container.attr('data-formsID', result.model.formsID);
-                    if (result.model.formIDs.length == 0) {
-                        container.attr('data-formID', '');
-                    } else {
-                        container.attr('data-formID', result.model.formIDs[0]);
-                    }
-                    if (result.model.parentFormID == null || result.model.parentFormID == '') {
-                        container.attr('data-parentFormID', '');
-                    } else {
-                        container.attr('data-parentFormID', result.model.parentFormID);
-                    }
-                    container.attr('data-formDone', result.model.lastFormDone);
-                    if (result.model.linkFormID == null || result.model.linkFormID == '') {
-                        container.attr('data-formLink', '0');
-                    } else {
-                        container.attr('data-formLink', '1');
-                    }
+                    var formDone = '0';
                     if (result.model.formIDs.length > 0) {
                         result.model.lastFormFields.forEach(function (item) {
-                            if (item.type == 2) {
+                            if (item.type == 3) {
+                                if (item.value == 'done') {
+                                    formDone = '1';
+                                }
+                            } else {
                                 addFormField(1, item.fieldID, item.type, item.value);
                             }
                         });
                     }
+
+                    result.model.linkFormFields.forEach(function (item) {
+                        if (item.type != 3) {
+                            addFormField(2, item.fieldID, item.type, item.value);
+                        }
+                    });
+
+                    var formLink = '0';
+                    if (result.model.linkFormID != null) {
+                        if (result.model.linkFormID != '') {
+                            formLink = '1';
+                        }
+                    }
+
+                    setFormPageAttributes(
+                        result.model.formsID, 
+                        result.model.formIDs.length == 0 ? '' : result.model.formIDs[0],
+                        result.model.parentFormID == null ? '' : result.model.parentFormID,
+                        formDone,
+                        result.model.formLinks.length > 0 ? '1' : '0',
+                        formLink);
                     showFormPage();
                 }
             },
@@ -997,53 +1030,134 @@
         });
     }
 
-    function setFormLink() {
+    function setActionFormLink() {
+        var parentFormID = $('.form-container').attr('data-formID');
+        if (parentFormID != '') {
+            var taskName = prompt("New task name");
+            if (taskName) {
+                taskName = taskName.trim();
+                if (taskName != '') {
+                    var model = {
+                        formsID1: $('.form-container').attr('data-formsID'),
+                        formsID2: '897545dc-5008-41b3-ba15-d15f7e003ad9',
+                        formsID2Title: taskName,
+                        userID: '1',
+                        linkFormID: parentFormID
+                    };
+                    $.ajax({
+                        url: baseURL + 'SetActionFormLink',
+                        type: "post",
+                        contentType: 'application/json',
+                        data: JSON.stringify(model),
+                        success: function (result) {
+
+                            alert('success');
+
+                        },
+                        error: function (result) {
+                            alert('Server communication error!');
+                        },
+                    });
+                }
+            }
+        }
+
+
+        /*
         $('.form-container').attr('data-formLink', '1');
         showFormPage()
+        */
     }
 
     function showFormPage() {
         $('.action-container').hide();
         $('.form-container').show();
 
+        var formID = $('.form-container').attr('data-formID');
+        var parentFormID = $('.form-container').attr('data-parentFormID');
         var formDone = parseInt($('.form-container').attr('data-formDone'));
+        var formsLink = parseInt($('.form-container').attr('data-formsLink'));
         var formLink = parseInt($('.form-container').attr('data-formLink'));
-        if (formDone == 0) {
+
+        var showDoneButton = (formDone == 1 || formID == '') ? false : true;
+        if (showDoneButton) {
             if (!($(".done-button").length > 0)) {
                 var container = $('.form-container').find('.scrollable-container').find('.form-fields');
                 var img = $("<img>")
                     .attr("src", "images/done.png")
                     .addClass("done-button").appendTo(container); 
                 img.click(function() {
-                    setFormDone();
+                    setActionFormDone();
                 });
             }
             $('.done-button').show();
-            $('.links-section').hide();
-            $('.submit-field-section').show();
         } else {
             if ($(".done-button").length > 0) {
                 $('.done-button').hide();
             }
+        }
+        if (formDone == 0) {
+            $('.links-section').hide();
+            $('.submit-field-section').show();
+        } else {
             $('.submit-field-section').hide();
             $('.links-section').show();
-            if (formLink == 0) {
+            if (formsLink == 0) {
                 if (!$('.links-section').hasClass("grayed-out")) {
                     $content.addClass("grayed-out").css("opacity", "0.5");
                 }
-                $('.link-section').hide();
             } else {
                 if ($('.links-section').hasClass("grayed-out")) {
                     $('.links-section').removeClass("grayed-out").css("opacity", "1");
                 }
-                $('.link-section').show();
             }
+        }
+        if (parentFormID != '') {
+            if (parentFormID != '') {
+                $('.links-section').hide();
+            }
+        }
+        if (formLink == 0) {
+            $('.link-section').hide();
+        } else {
+            $('.link-section').show();
         }
     }
 
-    function setFormDone() {
-        $('.form-container').attr('data-formDone', '1');
-        showFormPage();
+    function setActionFormDone() {
+        if ($('.form-container').attr('data-formID') != '') {
+            var field = {
+                fieldID: 'done-field',
+                type: 3,
+                value: 'done'
+            };
+            var fields = [];
+            fields.push(field);
+            var model = {
+                formsID: $('.form-container').attr('data-formsID'),
+                formID: $('.form-container').attr('data-formID'),
+                parentFormID: $('.form-container').attr('data-parentFormID'),
+                fields: fields
+            };
+            $.ajax({
+                url: baseURL + 'SaveActionFormFields',
+                type: "post",
+                contentType: 'application/json',
+                data: JSON.stringify(model),
+                success: function (result) {
+                    if (result.status == 'success') {
+                        $('.form-container').attr('data-formDone', '1');
+                        showFormPage();
+                    }
+                    else {
+                        alert('Server error !')
+                    }
+                },
+                error: function (result) {
+                    alert('Server communication error!');
+                },
+            });
+        }
     }
 
     /*
