@@ -92,6 +92,10 @@
       transition: opacity 0.3s ease; /* Smooth transition for enabling/disabling the effect */
     }
 
+    .place-holder {
+        color:rgba(0, 0, 0, 0.3);
+    }
+
     .form-container {
         width: 100%;
         height: 100%;
@@ -114,7 +118,7 @@
         cursor: pointer;
     }
 
-    .add-field-button {
+    .add-field-button, .select-field-value-button {
         width: 40px; 
         height: 40px; 
         cursor: pointer;        
@@ -237,22 +241,22 @@
         cursor: pointer;
     }
 
-    .field-options {
+    .overlay-container {
         display: flex; 
         flex-direction: column; 
         overflow-y: auto;
         width: 100%; 
-        height: 100%; 
-        border: 3px solid blue;
+        height: 100%;
     }
-    .field-option {
+    .overlay-container-group {
         padding-left: 10px; 
         padding-right: 10px; 
         padding-top: 5px; 
         padding-bottom: 5px; 
+        white-space: pre-wrap;
         cursor: pointer;
     }
-    .field-option:not(:last-child) {
+    .overlay-container-group:not(:last-child) {
         border-bottom: 1px solid #ccc;
     }
 
@@ -334,9 +338,7 @@
 
 <div class="modal" id="modal">
     <button class="close-btn" id="closeModalBtn">X</button>
-    <div class="field-options"
-         style="display: flex; flex-direction: column; overflow-y: auto;
-                width: 100%; height: 100%; border: 3px solid blue">
+    <div class="overlay-container">
     </div>
 </div>
 
@@ -360,7 +362,11 @@
             <img src="images/add.png"
                  class="button-icon">
         </div>
-        <div></div>
+        <div>
+            <img src="images/browse.png"
+                 class="button-icon"
+                 onclick="browseActionForms(); return false;">
+        </div>
     </div>
 
     <div class="submit-field-section form-section"
@@ -370,6 +376,9 @@
         <img src="images/addField.png"
              class="add-field-button"
              onclick="newSubmitField(this); return false;">
+        <img src="images/select.png"
+             class="select-field-value-button"
+             onclick="selectActionFormFieldValue(this); return false;">
         <div class="submit-field-type submit-field"
              onclick="changeSubmitFieldType(this); return false;">Fill</div>
         <textarea class="field-to-submit submit-field" rows="1"></textarea>
@@ -604,24 +613,32 @@
         return decodeURIComponent(unicodeStr);
     }
 
-    function getRawFieldContainer(fieldID, type, value) {
+    function getRawFieldContainer(fieldID, type, value, placeHolder) {
         var fieldContainer = $('<div>', {
             class: 'raw-field-container',
             'data-fieldID': fieldID,
             'data-type': type,
-            'data-value': value
+            'data-value': value,
+            'data-placeHolder': placeHolder == null ? '' : placeHolder
         });
         fieldContainer.click(function() {
             setSubmitField(this);
         });
-        $('<div>', {
-            class: 'raw-field',
-            text: value
-        }).appendTo(fieldContainer);
+        if (placeHolder == null || placeHolder == '') {
+            $('<div>', {
+                class: 'raw-field',
+                text: value
+            }).appendTo(fieldContainer);
+        } else {
+            $('<div>', {
+                class: 'raw-field place-holder',
+                text: placeHolder
+            }).appendTo(fieldContainer);
+        }
         return fieldContainer;
     }
 
-    function addFormField(containerType, fieldID, type, value) {
+    function addFormField(containerType, fieldID, type, value, placeHolder) {
         if (type == 2) {
             var container = null;
             if (containerType == 1) {
@@ -633,15 +650,17 @@
             if (container != null) {
                 var fieldContainer = null;
                 if (type == 2) {
-                    fieldContainer = getRawFieldContainer(fieldID, type, value);
+                    fieldContainer = getRawFieldContainer(fieldID, type, value, placeHolder);
                     fieldContainer.appendTo(container);
                 }
+                /*
                 else if (type == 3) {
                     fieldContainer = getLinkFieldContainer(fieldID, type, value);
                     if (fieldContainer != null) {
                         fieldContainer.appendTo(container);
                     }
                 }
+                    */
                 if (fieldContainer != null) {
                     if (containerType == 1) {
                         $('<div>', {
@@ -677,7 +696,7 @@
             field.find('.raw-field').text(value);
         }
         else {
-            addFormField(1, fieldID, type, value);
+            addFormField(1, fieldID, type, value, '');
         }
     }
 
@@ -704,12 +723,12 @@
                                 formDone = '1';
                             }
                         } else {
-                            addFormField(1, item.fieldID, item.type, item.value);
+                            addFormField(1, item.fieldID, item.type, item.value, item.placeHolder);
                         }
                     });
                     result.model.linkFormFields.forEach(function (item) {
                         if (item.type != 3) {
-                            addFormField(2, item.fieldID, item.type, item.value);
+                            addFormField(2, item.fieldID, item.type, item.value, item.placeHolder);
                         }
                     });
 
@@ -743,6 +762,7 @@
         fieldSection.attr('data-fieldID', '');
         fieldSection.attr('data-type', '2');
         fieldSection.find('.field-to-submit').val('');
+        $('.field-to-submit').attr('placeholder', '');
         $('.submit-field').show();
         fieldSection.find('.field-to-submit').focus();
         validateSubmitFieldAction();
@@ -763,6 +783,7 @@
         }
 
         $('.submit-field').show();
+        $('.field-to-submit').attr('placeholder', fieldContainer.attr('data-placeHolder'));
         fieldSection.find('.field-to-submit').focus();
         validateSubmitFieldAction();
     }
@@ -868,14 +889,14 @@
                                     formDone = '1';
                                 }
                             } else {
-                                addFormField(1, item.fieldID, item.type, item.value);
+                                addFormField(1, item.fieldID, item.type, item.value, item.placeHolder);
                             }
                         });
                     }
 
                     result.model.linkFormFields.forEach(function (item) {
                         if (item.type != 3) {
-                            addFormField(2, item.fieldID, item.type, item.value);
+                            addFormField(2, item.fieldID, item.type, item.value, item.placeHolder);
                         }
                     });
 
@@ -1052,6 +1073,83 @@
                 },
             });
         }
+    }
+
+    function browseActionForms() {
+        var container = $('.overlay-container');
+        container.html('');
+        showOverlayBlock();
+        var formsID = $('.form-container').attr('data-formsID');
+        var parentFormID= $('.form-container').attr('data-parentFormID');
+        var model = {
+            formsID: formsID,
+            parentFormID: parentFormID
+        };
+        $.ajax({
+            url: baseURL + 'BrowseActionForms',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == 'success') {
+                    result.model.formGroups.forEach(function (item) {
+                        var formGroup = $('<div>', {
+                            class: 'overlay-container-group',
+                            text: item.title,
+                            'data-formID': item.formID
+                        }).appendTo(container);
+                        formGroup.click(function() {
+                            getActionForm($(this).attr('data-formID'));
+
+                            overlay.style.display = 'none';
+                            modal.style.display = 'none';
+                            document.body.classList.remove('no-scroll');
+                        });
+                    });
+                }
+            },
+            error: function (result) {
+                alert('Server communication error!');
+            },
+        });
+    }
+
+    function selectActionFormFieldValue(elem) {
+        var container = $('.overlay-container');
+        container.html('');
+        showOverlayBlock();
+        var fieldID = $(elem).closest('.submit-field-section').attr('data-fieldID');
+        var model = {
+            fieldID: fieldID
+        };
+        $.ajax({
+            url: baseURL + 'GetActionFormFieldValues',
+            type: "post",
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (result) {
+                if (result.status == 'success') {
+                    result.model.values.forEach(function (item) {
+                        var fieldValueGroup = $('<div>', {
+                            class: 'overlay-container-group',
+                            text: item,
+                            'data-value': item
+                        }).appendTo(container);
+                        fieldValueGroup.click(function() {
+                            $('.field-to-submit').val($(this).attr('data-value'));
+                            validateSubmitFieldAction();
+
+                            overlay.style.display = 'none';
+                            modal.style.display = 'none';
+                            document.body.classList.remove('no-scroll');
+                        });
+                    });
+                }
+            },
+            error: function (result) {
+                alert('Server communication error!');
+            },
+        });
     }
 
 </script>
