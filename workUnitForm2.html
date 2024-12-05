@@ -160,32 +160,6 @@
         display: none;
     }
 
-/*
-    .submit-field-options {
-        width: 100%;
-    }
-    .submit-field-options> .options {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        background-color: lightgray;
-        padding: 5px;
-    }
-    .submit-field-options> .options > * {
-        box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 5px 8px 0 rgba(0,0,0,.14), 0 1px 14px 0 rgba(0,0,0,.12);
-        padding: 5px 10px;
-        border-radius: 10px;
-        box-sizing: border-box;
-        white-space: nowrap;
-        color: #666;
-    }
-    .submit-field-options> .options > div:not(:last-child) {
-        margin-right: 0px;
-    }
-    .submit-field-options> .options > div {
-        background-color: white;
-    }
-*/
     .form-container>.scrollable-container {
         position: relative;
         flex-grow: 1;
@@ -647,41 +621,6 @@
         return fieldContainer;
     }
 
-    /*
-    function getLinkFieldContainer(fieldID, type, value) {
-        var fieldContainer = null;
-        var parts = value.split('|');
-        if (parts.length >= 3) {
-            var formsID = parts[1];
-            var parentFormID = parts[2];
-            fieldContainer = $('<div>', {
-                class: 'raw-field-container',
-                'data-fieldID': fieldID,
-                'data-type': type,
-                'data-value': value,
-                'data-formsID': formsID,
-                'data-parentFormID': parentFormID
-            });
-            fieldContainer.click(function() {
-                var linkFormsID = $(this).attr('data-formsID');
-                var formID = $('.form-container').attr('data-formID');
-                if (formID == "") {
-                    submitLinkField(linkFormsID, $(this).attr('data-fieldID'));
-                }
-                else {
-                    openActionForms(linkFormsID, formID);
-                }
-            });
-            var formName = hexToUnicodeString(parts[0]);
-            $('<div>', {
-                class: 'raw-field link-field',
-                text: formName
-            }).appendTo(fieldContainer);
-        }      
-        return fieldContainer;  
-    }
-        */
-
     function addFormField(containerType, fieldID, type, value) {
         if (type == 2) {
             var container = null;
@@ -757,8 +696,7 @@
                 if (result.status == "success") {
                     $('.form-container').find('.scrollable-container').find('.form-fields').html('');
                     $('.form-container').find('.scrollable-container').find('.parent-form-fields').html('');
-//                    $('.form-section').show();
-//                    $('.submit-field').hide();
+
                     var formDone = '0';
                     result.model.fields.forEach(function (item) {
                         if (item.type == 3) {
@@ -806,6 +744,7 @@
         fieldSection.attr('data-type', '2');
         fieldSection.find('.field-to-submit').val('');
         $('.submit-field').show();
+        fieldSection.find('.field-to-submit').focus();
         validateSubmitFieldAction();
     }
 
@@ -824,6 +763,7 @@
         }
 
         $('.submit-field').show();
+        fieldSection.find('.field-to-submit').focus();
         validateSubmitFieldAction();
     }
 
@@ -864,6 +804,7 @@
                 parentFormID: $('.form-container').attr('data-parentFormID'),
                 fields: fields
             };
+
             $.ajax({
                 url: baseURL + 'SaveActionFormFields',
                 type: "post",
@@ -961,47 +902,6 @@
         });
     }
 
-    /*
-    function submitLinkField(linkFormsID, fieldID) {
-        var fields = [];
-        var formsContainer = $('.form-container').find('.scrollable-container').find('.form-fields');
-        formsContainer.find('.raw-field').each(function(index, element) {
-            var container = $(this).closest('.raw-field-container');
-            var fieldID = container.attr('data-fieldID');
-            var type = parseInt(container.attr('data-type'));
-            var value = container.attr('data-value');
-            fields.push({
-                fieldID: fieldID,
-                type: type,
-                value: value
-            });
-        });
-        var model = {
-            formsID: $('.form-container').attr('data-formsID'),
-            formID: '',
-            parentFormID: $('.form-container').attr('data-parentFormID'),
-            fields: fields
-        };
-        $.ajax({
-            url: baseURL + 'SaveActionFormFields',
-            type: "post",
-            contentType: 'application/json',
-            data: JSON.stringify(model),
-            success: function (result) {
-                if (result.status == 'success') {
-                    openActionForms(linkFormsID, result.model.formID);
-                }
-                else {
-                    alert('未能存入 !')
-                }
-            },
-            error: function (result) {
-                alert('未能送出 !')
-            },
-        });
-    }
-        */
-
     function getActionFormFieldValues() {
         var model = {
             fieldID: 'c8f7f591-61f3-41aa-9d7b-df77c49c11b8',
@@ -1096,6 +996,7 @@
                 $('.done-button').hide();
             }
         }
+
         if (formDone == 0) {
             $('.links-section').hide();
             $('.submit-field-section').show();
@@ -1117,7 +1018,7 @@
                 $('.links-section').hide();
             }
         }
-        if (formLink == 0) {
+        if (formsLink == 0) {
             $('.link-section').hide();
         } else {
             $('.link-section').show();
@@ -1125,22 +1026,15 @@
     }
 
     function setActionFormDone() {
-        if ($('.form-container').attr('data-formID') != '') {
-            var field = {
-                fieldID: 'done-field',
-                type: 3,
-                value: 'done'
-            };
-            var fields = [];
-            fields.push(field);
+        var formsID = $('.form-container').attr('data-formsID');
+        var formID = $('.form-container').attr('data-formID');
+        if (formID != '') {
             var model = {
-                formsID: $('.form-container').attr('data-formsID'),
-                formID: $('.form-container').attr('data-formID'),
-                parentFormID: $('.form-container').attr('data-parentFormID'),
-                fields: fields
+                formsID: formsID,
+                formID: formID
             };
             $.ajax({
-                url: baseURL + 'SaveActionFormFields',
+                url: baseURL + 'SetActionFormDone',
                 type: "post",
                 contentType: 'application/json',
                 data: JSON.stringify(model),
@@ -1159,39 +1053,5 @@
             });
         }
     }
-
-    /*
-    function createUserActions() {
-        var taskName = prompt("New task name");
-        if (taskName) {
-            taskName = taskName.trim();
-            if (taskName != '') {
-                var baseURL = "http://183.178.96.30/YuHingTesting1/api/Mobile/ActionFormsAPI/";
-
-                var model = {
-                    formsID: '84ada8dd-2a28-4a88-97ca-339ca4fd8ef5',
-                    name: taskName
-                };
-
-                $.ajax({
-                    url: baseURL1 + 'CreateUserActions',
-                    type: "post",
-                    contentType: 'application/json',
-                    data: JSON.stringify(model),
-                    success: function (result) {
-                        if (result.status == "success") {
-
-                            alert(result.model.formsID);
-
-                        }
-                    },
-                    error: function (result) {
-                        alert('Server communication error!');
-                    },
-                });
-            }
-        }
-    }
-        */
 
 </script>
