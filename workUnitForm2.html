@@ -377,7 +377,7 @@
              class="add-field-button"
              onclick="newSubmitField(this); return false;">
         <img src="images/select.png"
-             class="select-field-value-button"
+             class="select-field-value-button submit-field"
              onclick="selectActionFormFieldValue(this); return false;">
         <div class="submit-field-type submit-field"
              onclick="changeSubmitFieldType(this); return false;">Fill</div>
@@ -1044,6 +1044,9 @@
         } else {
             $('.link-section').show();
         }
+
+        $('.submit-field').hide();
+        $('.field-to-submit').val('');
     }
 
     function setActionFormDone() {
